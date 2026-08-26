@@ -1,6 +1,6 @@
 {
   "name": "@hexiongwu1995/itemplate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "iTemplate - A html template",
   "main": "script/script.js",
   "style": "css/style.css",
