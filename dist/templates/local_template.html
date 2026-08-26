@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>local_template</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_5215219_v2x8fivud1r.css">
+    <script src="../script/script.js" defer></script>
+    <script src="../script/mathjax-config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4/startup.js" defer></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside>
+            <div class="function-panel">
+                <span class="aside-title"> 目录 </span>
+                <span class="iconfont icon-Numbering"></span>
+                <span class="iconfont icon-expand-all"></span>
+            </div>
+            <nav>
+                <ol id="toc-root"></ol>
+            </nav>
+
+            <div id="resize-handle"></div>
+        </aside>
+
+        <div class="overlay"></div>
+
+        <main>
+            <header>
+
+                <span class="header-left">
+                    <span class="iconfont icon-Aside"></span>
+                    <span class="iconfont icon-menu3"></span>
+                </span>
+
+                <span class="header-middle">
+                    <script>document.write(document.title.split('-')[0])</script>
+                </span>
+
+                <span class="header-right">
+                    <a class="iconfont-home">
+                        <span class="iconfont icon-home"></span>
+                    </a>
+
+                    <a class="iconfont-github" href="https://github.com/hexiongwu1995/" target="_blank">
+                        <span class="iconfont icon-github"></span>
+                    </a>
+
+                    <a class="iconfont-print" href="#">
+                        <span class="iconfont icon-print"></span>
+                    </a>
+                    <span class="iconfont icon-paintbrush"></span>
+                </span>
+
+            </header>
+
+            <article>
+                <h2> Heading requirements </h2>
+                <br>
+                <ul>
+                    <li>Level 1 heading is the title of the document and can only be used once at the top of the
+                        document.</li>
+                    <li>Level 2 heading is the subtitle of the document.</li>
+                    <li>Headings must begin from h2 or h2 after a h1 heading.</li>
+                    <li>Only h2 h3 and h4 headings are listed in the table of contents.</li>
+                </ul>
+            </article>
+
+        </main>
+    </div>
+
+</body>
+
+</html>
