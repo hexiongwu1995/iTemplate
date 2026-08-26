@@ -1,0 +1,22 @@
+{
+  "name": "@hexiongwu1995/itemplate",
+  "version": "0.0.1",
+  "description": "iTemplate - A html template",
+  "main": "script/script.js",
+  "style": "css/style.css",
+  "files": [
+    "css/",
+    "script/",
+    "templates/"
+  ],
+  "keywords": [
+    "html template",
+    "typst"
+  ],
+  "author": "hexiongwu1995",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hexiongwu1995/iTemplate.git"
+  }
+}
