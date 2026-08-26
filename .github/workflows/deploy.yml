@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'dist/**'
-      - 'templates/**'
+      - 'examples/**'
       - '.github/workflows/deploy.yml'
 
 jobs:
