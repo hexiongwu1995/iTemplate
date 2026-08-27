@@ -4,13 +4,13 @@ MathJax = {
   },
 
   asciimath: {
-    delimiters: [["`", "`"]],
+    delimiters: ["`", "`"],
   },
 };
 
 const root = document.documentElement;
-const article = document.querySelector("article");
-const tocRoot = document.getElementById("toc-root");
+let article = document.querySelector("article");
+let tocRoot = document.getElementById("toc-root");
 
 let headings = [];
 const getLevel = (el) => parseInt(el.tagName[1], 10);
@@ -22,10 +22,6 @@ function initHeadings() {
   const counters = [];
 
   if (headings.length > 0) {
-    // if (getLevel(headings[0]) > getLevel(headings[1])) {
-    //   alert("初始标题的层级必须小于等于后续标题的层级");
-    // }
-
     headings.forEach((heading) => {
       const level = getLevel(heading);
 
@@ -145,158 +141,208 @@ function updateTocText() {
   });
 }
 
+// 将当前原始 Typst HTML 转换为套用模板的页面
+function wrapWithTemplate() {
+  const title = document.title || "document";
+  const bodyContent = document.body.innerHTML;
+
+  // 判断是否使用 online 资源（根据当前页面路径或协议）
+  const isOnline = location.protocol === "https:" || location.protocol === "http:";
+
+  const cssPath = isOnline
+    ? "https://unpkg.com/@hexiongwu1995/itemplate/styles/style.css"
+    : "../styles/style.css";
+
+  // 更新 title
+  document.title = title + "-online";
+
+  // 清空并重建 body 结构
+  const originalBodyContent = bodyContent;
+  document.body.innerHTML = "";
+
+  // 添加模板所需的 CSS
+  const fontLink = document.createElement("link");
+  fontLink.rel = "stylesheet";
+  fontLink.href = "https://at.alicdn.com/t/c/font_5215219_v2x8fivud1r.css";
+  document.head.appendChild(fontLink);
+
+  const styleLink = document.createElement("link");
+  styleLink.rel = "stylesheet";
+  styleLink.href = cssPath;
+  document.head.appendChild(styleLink);
+
+  // 添加 MathJax
+  const mathjaxScript = document.createElement("script");
+  mathjaxScript.src = "https://unpkg.com/mathjax@4/startup.js";
+  mathjaxScript.defer = true;
+  document.head.appendChild(mathjaxScript);
+
+  // 添加 importmap
+  const importMapScript = document.createElement("script");
+  importMapScript.type = "importmap";
+  importMapScript.textContent = JSON.stringify({
+    imports: {
+      three: "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+    }
+  });
+  document.head.appendChild(importMapScript);
+
+  // 构建模板 DOM 结构
+  const container = document.createElement("div");
+  container.className = "container";
+
+  container.innerHTML = `
+    <aside>
+      <div class="function-panel">
+        <span class="aside-title">${title}</span>
+        <span class="function-item">
+          <span class="iconfont icon-Numbering">标题序号</span>
+          <span class="iconfont icon-expand-all">展开目录</span>
+        </span>
+      </div>
+      <nav>
+        <ol id="toc-root"></ol>
+      </nav>
+      <div id="resize-handle"></div>
+    </aside>
+    <div class="overlay"></div>
+    <main>
+      <header>
+        <span class="header-left">
+          <span class="iconfont icon-Aside"></span>
+          <span class="iconfont icon-menu3"></span>
+        </span>
+        <span class="header-middle"> </span>
+        <span class="header-right">
+          <a class="iconfont-home">
+            <span class="iconfont icon-home"></span>
+          </a>
+          <a class="iconfont-github" href="https://github.com/hexiongwu1995/" target="_blank">
+            <span class="iconfont icon-github"></span>
+          </a>
+          <a class="iconfont-print" href="#">
+            <span class="iconfont icon-print"></span>
+          </a>
+          <span class="iconfont icon-paintbrush"></span>
+        </span>
+      </header>
+      <article>${originalBodyContent}</article>
+    </main>
+  `;
+
+  document.body.appendChild(container);
+
+  // 重新获取关键 DOM 引用
+  article = document.querySelector("article");
+  tocRoot = document.getElementById("toc-root");
+
+  console.log("✅ 已自动套用模板");
+}
+
+// 自动套用模板
+wrapWithTemplate();
+
+// 初始化 headings 和 TOC
 initHeadings();
 buildToc();
-
-// // 使用 fetch 加载 theoframe.html 并提取 body 内容
-// fetch('theoframe.html')
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! status: ${response.status}`);
-//         }
-//         return response.text();
-//     })
-//     .then(html => {
-//         const parser = new DOMParser();
-//         const doc = parser.parseFromString(html, 'text/html');
-//         const bodyContent = doc.body.innerHTML;
-
-//         const article = document.querySelector('article');
-//         if (article) {
-//             article.innerHTML = bodyContent;
-//             console.log('✅ 内容已从 theoframe.html 提取并插入 article');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('获取 theoframe.html 失败:', error);
-//     })
-//     .finally(() => {
-//         // 无论 fetch 成功或失败，都构建目录
-//         buildToc();
-//     });
-
-const docTitle = document.querySelector("title").textContent;
-const fileName = docTitle.split("-")[0] + ".html";
-async function loadContent() {
-  try {
-    const response = await fetch(fileName);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const html = await response.text();
-    const doc = new DOMParser().parseFromString(html, "text/html");
-
-    document.querySelector("article").innerHTML = doc.body.innerHTML;
-    console.log("✅ 内容加载完成");
-
-    // 动态加载注入内容中的脚本
-    const scripts = doc.body.querySelectorAll("script");
-    scripts.forEach((oldScript) => {
-      const newScript = document.createElement("script");
-      if (oldScript.src) {
-        newScript.src = oldScript.src;
-      } else {
-        newScript.textContent = oldScript.textContent;
-      }
-      if (oldScript.type) {
-        newScript.type = oldScript.type;
-      }
-      document.body.appendChild(newScript);
-    });
-  } catch (error) {
-    console.error("加载失败:", error);
-  } finally {
-    initHeadings();
-    buildToc();
-  }
-}
-
-if (docTitle.split("-")[1] === "online" || docTitle.split("-")[1] === "local") {
-  loadContent();
-}
 
 // 显示/隐藏目录编号
 const toggleNumbering = document.querySelector(".icon-Numbering");
 
-toggleNumbering.addEventListener("click", () => {
-  const currentValue = getComputedStyle(root).getPropertyValue("--enable-numbering").trim();
-  const newValue = currentValue === "true" ? "false" : "true";
-  root.style.setProperty("--enable-numbering", newValue);
+if (toggleNumbering) {
+  toggleNumbering.addEventListener("click", () => {
+    const currentValue = getComputedStyle(root).getPropertyValue("--enable-numbering").trim();
+    const newValue = currentValue === "true" ? "false" : "true";
+    root.style.setProperty("--enable-numbering", newValue);
 
-  updateTocText();
-});
+    updateTocText();
+  });
+}
 
 // 点击arrow切换目录展开状态
 const nav = document.querySelector("nav");
-nav.addEventListener("click", (e) => {
-  const arrow = e.target.closest(".icon-arrow2");
-  if (!arrow) return;
+if (nav) {
+  nav.addEventListener("click", (e) => {
+    const arrow = e.target.closest(".icon-arrow2");
+    if (!arrow) return;
 
-  e.preventDefault();
-  e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 
-  const li = arrow.closest("li");
-  const nestedOl = li.querySelector(":scope > ol");
+    const li = arrow.closest("li");
+    const nestedOl = li.querySelector(":scope > ol");
 
-  if (!nestedOl) return;
+    if (!nestedOl) return;
 
-  nestedOl.classList.toggle("show");
-  arrow.classList.toggle("rotate-90");
-});
+    nestedOl.classList.toggle("show");
+    arrow.classList.toggle("rotate-90");
+  });
+}
 
 // 展开/收起 所有目录
 const iconExpand = document.querySelector(".icon-expand-all");
 
-iconExpand.addEventListener("click", () => {
-  const ol = tocRoot.querySelectorAll("ol");
-  const arrows = tocRoot.querySelectorAll(".icon-arrow2");
-  const allExpandedValue = getComputedStyle(root).getPropertyValue("--all-expanded").trim();
-  const newAllExpanded = allExpandedValue === "false" ? "true" : "false";
-  root.style.setProperty("--all-expanded", newAllExpanded);
+if (iconExpand) {
+  iconExpand.addEventListener("click", () => {
+    const ol = tocRoot.querySelectorAll("ol");
+    const arrows = tocRoot.querySelectorAll(".icon-arrow2");
+    const allExpandedValue = getComputedStyle(root).getPropertyValue("--all-expanded").trim();
+    const newAllExpanded = allExpandedValue === "false" ? "true" : "false";
+    root.style.setProperty("--all-expanded", newAllExpanded);
 
-  if (newAllExpanded === "true") {
-    ol.forEach((item) => {
-      item.classList.add("show");
-    });
-    arrows.forEach((arrow) => {
-      arrow.classList.add("rotate-90");
-    });
-  } else if (newAllExpanded === "false") {
-    ol.forEach((item) => {
-      item.classList.remove("show");
-    });
-    arrows.forEach((arrow) => {
-      arrow.classList.remove("rotate-90");
-    });
-  } else {
-    alert("展开/收起所有目录失败");
-  }
-});
+    if (newAllExpanded === "true") {
+      ol.forEach((item) => {
+        item.classList.add("show");
+      });
+      arrows.forEach((arrow) => {
+        arrow.classList.add("rotate-90");
+      });
+    } else if (newAllExpanded === "false") {
+      ol.forEach((item) => {
+        item.classList.remove("show");
+      });
+      arrows.forEach((arrow) => {
+        arrow.classList.remove("rotate-90");
+      });
+    } else {
+      alert("展开/收起所有目录失败");
+    }
+  });
+}
 
 // 大屏状态下 显示/隐藏 侧边栏
 const iconAside = document.querySelector(".icon-Aside");
 const aside = document.querySelector("aside");
 const main = document.querySelector("main");
-iconAside.addEventListener("click", () => {
-  main.classList.toggle("hidden");
-  iconAside.classList.toggle("hidden");
-  aside.classList.toggle("hidden");
-});
+
+if (iconAside) {
+  iconAside.addEventListener("click", () => {
+    main.classList.toggle("hidden");
+    iconAside.classList.toggle("hidden");
+    aside.classList.toggle("hidden");
+  });
+}
 
 // 小屏状态下 显示/隐藏 侧边栏
 const iconMenu3 = document.querySelector(".icon-menu3");
 const overlay = document.querySelector(".overlay");
 
-iconMenu3.addEventListener("click", () => {
-  iconMenu3.classList.toggle("show");
-  aside.classList.toggle("show");
-  overlay.classList.toggle("show");
-});
+if (iconMenu3) {
+  iconMenu3.addEventListener("click", () => {
+    iconMenu3.classList.toggle("show");
+    aside.classList.toggle("show");
+    overlay.classList.toggle("show");
+  });
+}
 
-overlay.addEventListener("click", () => {
-  iconMenu3.classList.remove("show");
-  aside.classList.remove("show");
-  overlay.classList.remove("show");
-});
+if (overlay) {
+  overlay.addEventListener("click", () => {
+    iconMenu3.classList.remove("show");
+    aside.classList.remove("show");
+    overlay.classList.remove("show");
+  });
+}
 
 // 侧边栏宽度调整
 const resizeHandle = document.querySelector("#resize-handle");

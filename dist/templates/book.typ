@@ -22,54 +22,7 @@
     ]
 
     #html.elem("body")[
-      #html.elem("div", attrs: (class: "container"))[
-        #html.elem("aside")[
-          #html.elem("div", attrs: (class: "function-panel"))[
-            #html.elem("span", attrs: (class: "aside-title"))[
-              #html.elem("script")[document.write(document.title)]
-            ]
-            #html.elem("span", attrs: (class: "function-item"))[
-              #html.elem("span", attrs: (class: "iconfont icon-Numbering"))[标题序号]
-              #html.elem("span", attrs: (class: "iconfont icon-expand-all"))[展开目录]
-            ]
-          ]
-          #html.elem("nav")[
-            #html.elem("ol", attrs: (id: "toc-root"))[]
-          ]
-          #html.elem("div", attrs: (id: "resize-handle"))[]
-        ]
-
-        #html.elem("div", attrs: (class: "overlay"))[]
-
-        #html.elem("main")[
-          #html.elem("header")[
-            #html.elem("span", attrs: (class: "header-left"))[
-              #html.elem("span", attrs: (class: "iconfont icon-Aside"))[]
-              #html.elem("span", attrs: (class: "iconfont icon-menu3"))[]
-            ]
-            #html.elem("span", attrs: (class: "header-middle"))[]
-            #html.elem("span", attrs: (class: "header-right"))[
-              #html.elem("a", attrs: (class: "iconfont-home"))[
-                #html.elem("span", attrs: (class: "iconfont icon-home"))[]
-              ]
-              #html.elem("a", attrs: (
-                class: "iconfont-github",
-                href: "https://github.com/hexiongwu1995/",
-                target: "_blank",
-              ))[
-                #html.elem("span", attrs: (class: "iconfont icon-github"))[]
-              ]
-              #html.elem("a", attrs: (class: "iconfont-print", href: "#"))[
-                #html.elem("span", attrs: (class: "iconfont icon-print"))[]
-              ]
-              #html.elem("span", attrs: (class: "iconfont icon-paintbrush"))[]
-            ]
-          ]
-          #html.elem("article")[
-            #body
-          ]
-        ]
-      ]
+      #body
     ]
   ]
 }
