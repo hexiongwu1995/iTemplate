@@ -5,12 +5,13 @@
   --header-height: 60px;
 
   --aside-color: #ebe6df;
-  --divider-color: #eae7e5fe;
+  --border-color: #dfdcd8;
+  --divider-color: #eaddd5fe;
   --smalltext-color: #bdbdbd;
   --main-color: #fffefc;
   --header-color: #fffefc;
-  --title-color: #929292;
-  --icon-color: #989898;
+  --title-color: #a06205;
+  --icon-color: #999999;
   --icon-bag: #e5dbc4c0;
   --icon-hover: #cab391a4;
   --icon-mobile-bag: #db9512;
@@ -24,7 +25,7 @@
   --activate-bag: #dfb663;
   --activate-font: #d18204;
 
-  --title-size: 24px;
+  --title-size: 20px;
   --font-size: 16px;
   --smalltext-size: 12px;
   --icon-size: 20px;
@@ -36,8 +37,6 @@
   --icon-padding: 10px;
   --button-padding: 10px;
 }
-
-
 
 * {
   margin: 0;
@@ -95,7 +94,8 @@ aside {
   width: var(--aside-width);
   height: 100vh;
   background-color: var(--aside-color);
-  padding: 20px 0px;
+  /* border-right: 2px solid var(--border-color); */
+  padding: 0px;
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -115,7 +115,20 @@ aside.hidden {
   right: 0px;
   width: 4px;
   height: 100vh;
-  background-color: none;
+  background-color: transparent;
+}
+
+/* 使用 ::after 扩大感应区域 */
+#resize-handle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  /* 向右扩展 10px，向左扩展 10px，总感应宽度 = 4 + 10 + 10 = 24px */
+  right: -10px;
+  width: 24px;
+  height: 100vh;
+  /* background-color: rgba(255, 0, 0, 0.1);  */
+  /* 调试用，可看见感应区域 */
 }
 
 #resize-handle:hover {
@@ -149,24 +162,41 @@ nav::-webkit-scrollbar {
 .function-panel {
   width: 100%;
   height: auto;
-  border-bottom: 2px solid var(--divider-color);
+  /* border-bottom: 2px solid var(--divider-color); */
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
 }
 
-.aside-title,
+.aside-title {
+  width: 60%;
+  height: 60px;
+  padding: 20px;
+  text-align: left;
+  background-color: none;
+  color: var(--title-color);
+  font-size: var(--title-size);
+  font-weight: 500;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .icon-Numbering,
 .icon-expand-all {
-  width: 33.3%;
+  width: 20%;
+  height: 60px;
   padding: 20px;
   text-align: center;
   background-color: none;
-  color: var(--aside-font-color);
+  color: var(--icon-color);
   font-size: var(--font-size);
   cursor: pointer;
+  overflow: hidden;
 }
+
 .aside-title:hover,
 .icon-Numbering:hover,
 .icon-expand-all:hover {
@@ -203,7 +233,7 @@ nav,
 }
 
 #toc-root > li > a {
-  padding: 10px 2em;
+  padding: 10px 20px;
   font-weight: 500;
 }
 
@@ -266,7 +296,6 @@ main.hidden {
 main.resizing {
   transition: none;
 }
-
 
 header {
   position: sticky;
@@ -369,7 +398,12 @@ article {
     /* padding: 0px 20px; */
   }
 
-  .header-left {
+  header {
+    height: 0px;
+    overflow: hidden;
+  }
+
+  /* .header-left {
     width: 0px;
   }
 
@@ -381,7 +415,8 @@ article {
   .header-right {
     width: 45%;
     gap: 20px;
-  }
+  } */
+
 
   .icon-Aside {
     display: none;
@@ -497,7 +532,6 @@ figure {
   color: var(--font-color);
   text-decoration: none;
 }
-
 
 /* MathJax.css */
 
