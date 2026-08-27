@@ -4,7 +4,7 @@ MathJax = {
   },
 
   asciimath: {
-    delimiters: ["`", "`"],
+    delimiters: [["`", "`"]],
   },
 };
 
