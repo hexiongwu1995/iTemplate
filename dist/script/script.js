@@ -201,7 +201,7 @@ async function loadContent() {
   }
 }
 
-if (docTitle.split("-")[1] === "online") {
+if (docTitle.split("-")[1] === "online" || docTitle.split("-")[1] === "local") {
   loadContent();
 }
 

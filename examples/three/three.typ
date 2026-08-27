@@ -1,7 +1,12 @@
 
 
-#html.elem("div", attrs: (style: "background: gray; width: 100%; height: 50vh", id:"first-container"))[
+
+
+#html.elem("div", attrs: (style: "background: white; margin-top: 50px; width: 100%; height: 30vh", id:"orbital-cube"))[
 ]
 
-#html.script(type:"module", src: "./three-dimension-graphics.js")
+#html.script(type:"module", src: "./orbital-cube.js")
+
+
+
 
