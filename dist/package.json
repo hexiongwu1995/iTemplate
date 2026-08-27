@@ -1,12 +1,12 @@
 {
   "name": "@hexiongwu1995/itemplate",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "iTemplate - A html template",
-  "main": "script/script.js",
-  "style": "css/style.css",
+  "main": "scripts/script.js",
+  "style": "styles/style.css",
   "files": [
-    "css/",
-    "script/",
+    "styles/",
+    "scripts/",
     "templates/"
   ],
   "keywords": [
