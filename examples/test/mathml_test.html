@@ -1,15 +1,24 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mathml_test</title>
+    <title>template-online</title>
     <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_5215219_v2x8fivud1r.css">
     <link rel="stylesheet" href="https://unpkg.com/@hexiongwu1995/itemplate/css/style.css">
     <script src="https://unpkg.com/@hexiongwu1995/itemplate/script/script.js" defer></script>
     <script src="https://unpkg.com/@hexiongwu1995/itemplate/script/mathjax-config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@4/startup.js" defer></script>
+    <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+  }
+}
+</script>
 </head>
 
 <body>
@@ -18,9 +27,14 @@
 
         <aside>
             <div class="function-panel">
-                <span class="aside-title"> <script>document.write(document.title.split('-')[0])</script> </span>
-                <span class="iconfont icon-Numbering"></span>
-                <span class="iconfont icon-expand-all"></span>
+                <span class="aside-title">
+                    <script>document.write(document.title.split('-')[0])</script>
+                </span>
+                <span class="function-item">
+                    <span class="iconfont icon-Numbering">标题序号</span>
+                    <span class="iconfont icon-expand-all">展开目录</span>
+                </span>
+
             </div>
             <nav>
                 <ol id="toc-root"></ol>
@@ -39,9 +53,7 @@
                     <span class="iconfont icon-menu3"></span>
                 </span>
 
-                <span class="header-middle">
-                    
-                </span>
+                <span class="header-middle"> </span>
 
                 <span class="header-right">
                     <a class="iconfont-home">
@@ -61,10 +73,9 @@
             </header>
 
             <article>
-                
-                <h3>A Level 3 heading</h3>
                 <h2>A Level 2 heading</h2>
-                
+                <h3>A Level 3 heading</h3>
+
                 <p>当 <math>
                         <mi>𝐶</mi>
                         <mo>&lt;</mo>
