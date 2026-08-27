@@ -178,6 +178,21 @@ async function loadContent() {
 
     document.querySelector("article").innerHTML = doc.body.innerHTML;
     console.log("✅ 内容加载完成");
+
+    // 动态加载注入内容中的脚本
+    const scripts = doc.body.querySelectorAll("script");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      if (oldScript.type) {
+        newScript.type = oldScript.type;
+      }
+      document.body.appendChild(newScript);
+    });
   } catch (error) {
     console.error("加载失败:", error);
   } finally {
