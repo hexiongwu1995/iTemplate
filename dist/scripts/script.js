@@ -1,3 +1,13 @@
+MathJax = {
+  loader: {
+    load: ["input/mml", "input/asciimath", "output/chtml"],
+  },
+
+  asciimath: {
+    delimiters: [["`", "`"]],
+  },
+};
+
 const root = document.documentElement;
 const article = document.querySelector("article");
 const tocRoot = document.getElementById("toc-root");
@@ -12,7 +22,6 @@ function initHeadings() {
   const counters = [];
 
   if (headings.length > 0) {
-
     // if (getLevel(headings[0]) > getLevel(headings[1])) {
     //   alert("初始标题的层级必须小于等于后续标题的层级");
     // }
