@@ -23,8 +23,6 @@ function wrapWithTemplate() {
   const originalBodyContent = bodyContent;
   document.body.innerHTML = "";
 
-
-  
   function loadCss(url) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -51,10 +49,8 @@ function wrapWithTemplate() {
 
   const styleCssPath = isOnline ? "https://unpkg.com/@hexiongwu1995/itemplate/styles/style.css" : "../../dist/styles/style.css";
 
-  const cssLoaded = Promise.all([
-    appendStyleLink(iconFontCssPath),
-    appendStyleLink(styleCssPath),
-  ]);
+  appendStyleLink(iconFontCssPath);
+  appendStyleLink(styleCssPath);
 
   // 添加 MathJax
   const mathjaxScript = document.createElement("script");
@@ -119,12 +115,10 @@ function wrapWithTemplate() {
   document.body.appendChild(container);
 
   console.log("✅ 已自动套用模板");
-
-  return cssLoaded;
 }
 
 // 自动套用模板
-const templateReady = wrapWithTemplate();
+wrapWithTemplate();
 
 function getLevel(heading) {
   return parseInt(heading.tagName[1], 10);
@@ -282,10 +276,8 @@ function updateTocText() {
   });
 }
 
-templateReady.then(() => {
-  initHeadings();
-  buildToc();
-});
+initHeadings();
+buildToc();
 
 // 显示/隐藏目录编号
 const toggleNumbering = document.querySelector(".icon-Numbering");
