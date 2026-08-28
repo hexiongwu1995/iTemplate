@@ -1,12 +1,3 @@
-MathJax = {
-  loader: {
-    load: ["input/mml", "input/asciimath", "output/chtml"],
-  },
-
-  asciimath: {
-    delimiters: [["`", "`"]],
-  },
-};
 
 const root = document.documentElement;
 let article = document.querySelector("article");
@@ -163,7 +154,7 @@ function wrapWithTemplate() {
   // 添加模板所需的 CSS
   const fontLink = document.createElement("link");
   fontLink.rel = "stylesheet";
-  fontLink.href = "https://at.alicdn.com/t/c/font_5215219_v2x8fivud1r.css";
+  fontLink.href = "../icon_font/iconfont.css";
   document.head.appendChild(fontLink);
 
   const styleLink = document.createElement("link");
@@ -383,3 +374,13 @@ if (resizeHandle) {
     document.body.style.userSelect = "";
   });
 }
+
+MathJax = {
+  loader: {
+    load: ["input/mml", "input/asciimath", "output/chtml"],
+  },
+
+  asciimath: {
+    delimiters: [["`", "`"]],
+  },
+};
