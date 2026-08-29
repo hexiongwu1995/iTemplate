@@ -3,8 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // init
-
-const container = document.getElementById("orbital-cube");
+const container = document.getElementById("three-orbital-cube");
 let width = container.clientWidth;
 let height = container.clientHeight;
 

@@ -1,5 +1,9 @@
 "use strict";
 
+// 立即隐藏页面，防止 FOUC（无样式内容闪烁）
+// 使用 display:none 确保页面在初始化完成前完全不渲染
+// document.documentElement.style.display = "none";
+
 // 如果 MathJax 不存在，先创建它
 window.MathJax = window.MathJax || {};
 
@@ -11,6 +15,9 @@ window.MathJax.loader = {
 window.MathJax.asciimath = {
   delimiters: [["`", "`"]],
 };
+
+// 存储需要延迟加载的外部脚本
+let deferredScripts = [];
 
 // 将当前原始 Typst HTML 转换为套用模板的页面
 function wrapWithTemplate() {
@@ -24,6 +31,24 @@ function wrapWithTemplate() {
 
   // 清空并重建 body 结构
   const originalBodyContent = document.body.innerHTML;
+
+  // 分离带 src 的脚本和其他内容
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = originalBodyContent;
+
+  deferredScripts = [];
+  tempDiv.querySelectorAll("script[src]").forEach((script) => {
+    deferredScripts.push({
+      src: script.getAttribute("src"),
+      type: script.type,
+      defer: script.defer,
+      async: script.async,
+    });
+    script.remove();
+  });
+
+  const otherContent = tempDiv.innerHTML;
+
   document.body.innerHTML = "";
 
   function loadMathJax() {
@@ -110,7 +135,7 @@ function wrapWithTemplate() {
           <span class="iconfont icon-paintbrush"></span>
         </span>
       </header>
-      <article>${originalBodyContent}</article>
+      <article>${otherContent}</article>
     </main>
   `;
 
@@ -291,6 +316,8 @@ function updateTocText() {
 }
 
 function setupEventListeners() {
+  const root = document.documentElement;
+
   // 显示/隐藏目录编号
   const toggleNumbering = document.querySelector(".icon-Numbering");
 
@@ -326,6 +353,7 @@ function setupEventListeners() {
 
   // 展开/收起 所有目录
   const iconExpand = document.querySelector(".icon-expand-all");
+  const tocRoot = document.getElementById("toc-root");
 
   if (iconExpand) {
     iconExpand.addEventListener("click", () => {
@@ -435,13 +463,32 @@ function initializeApp() {
   setupEventListeners(); // 把事件监听绑定也封装起来
 }
 
+function loadDeferredScripts(scripts) {
+  scripts.forEach(({ src, type, defer, async }) => {
+    const script = document.createElement("script");
+    script.src = src;
+    if (type) script.type = type;
+    if (defer) script.defer = true;
+    if (async) script.async = true;
+    document.body.appendChild(script);
+  });
+}
+
 // 自动套用模板
 wrapWithTemplate()
   .then(() => {
     initializeApp();
+    // 所有初始化完成后，显示页面
+    document.documentElement.classList.add("loaded");
+    // 延迟加载原页面中的外部脚本
+    loadDeferredScripts(deferredScripts);
   })
   .catch((error) => {
     console.error("❌ 初始化应用失败:", error);
+    // 即使失败也显示页面，避免页面一直隐藏
+    document.documentElement.classList.add("loaded");
+    // 即使失败也加载脚本，避免页面功能缺失
+    loadDeferredScripts(deferredScripts);
     throw error;
     // 重新抛出，让调用方也能捕获
   });
