@@ -18,6 +18,8 @@ window.MathJax.asciimath = {
 
 // 存储需要延迟加载的外部脚本
 let deferredScripts = [];
+// 存储需要延迟加载的模块脚本（type="module"），必须在 importmap 注入之后才能加载
+let deferredModuleScripts = [];
 
 // 将当前原始 Typst HTML 转换为套用模板的页面
 function wrapWithTemplate() {
@@ -37,13 +39,23 @@ function wrapWithTemplate() {
   tempDiv.innerHTML = originalBodyContent;
 
   deferredScripts = [];
+  deferredModuleScripts = [];
   tempDiv.querySelectorAll("script[src]").forEach((script) => {
-    deferredScripts.push({
-      src: script.getAttribute("src"),
-      type: script.type,
-      defer: script.defer,
-      async: script.async,
-    });
+    if (script.type === "module") {
+      deferredModuleScripts.push({
+        src: script.getAttribute("src"),
+        type: script.type,
+        defer: script.defer,
+        async: script.async,
+      });
+    } else {
+      deferredScripts.push({
+        src: script.getAttribute("src"),
+        type: script.type,
+        defer: script.defer,
+        async: script.async,
+      });
+    }
     script.remove();
   });
 
@@ -474,14 +486,24 @@ function loadDeferredScripts(scripts) {
   });
 }
 
+function loadDeferredModuleScripts(scripts) {
+  scripts.forEach(({ src, type }) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.type = "module";
+    document.body.appendChild(script);
+  });
+}
+
 // 自动套用模板
 wrapWithTemplate()
   .then(() => {
     initializeApp();
     // 所有初始化完成后，显示页面
     document.documentElement.classList.add("loaded");
-    // 延迟加载原页面中的外部脚本
+    // 延迟加载原页面中的外部脚本（必须在 importmap 注入之后）
     loadDeferredScripts(deferredScripts);
+    loadDeferredModuleScripts(deferredModuleScripts);
   })
   .catch((error) => {
     console.error("❌ 初始化应用失败:", error);
@@ -489,6 +511,7 @@ wrapWithTemplate()
     document.documentElement.classList.add("loaded");
     // 即使失败也加载脚本，避免页面功能缺失
     loadDeferredScripts(deferredScripts);
+    loadDeferredModuleScripts(deferredModuleScripts);
     throw error;
     // 重新抛出，让调用方也能捕获
   });
