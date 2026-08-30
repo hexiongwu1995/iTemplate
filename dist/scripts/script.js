@@ -128,7 +128,6 @@ function updateHeadingText() {
     const arrow = a.querySelector(".icon-arrow2");
 
     if (enableNumbering === "false") {
-
       heading.textContent = heading.getAttribute("data-original-text");
 
       a.innerHTML = "";
@@ -144,7 +143,7 @@ function updateHeadingText() {
         a.appendChild(arrow);
       }
     } else {
-      console.log("--enable-numbering:",enableNumbering);
+      console.log("--enable-numbering:", enableNumbering);
       console.log(new Error("--enable-numbering must be true or false"));
     }
   });
@@ -232,7 +231,6 @@ function largeScreenToggleAside() {
   if (iconAside) {
     iconAside.addEventListener("click", () => {
       main.classList.toggle("hidden");
-      iconAside.classList.toggle("hidden");
       aside.classList.toggle("hidden");
     });
   }
@@ -240,6 +238,7 @@ function largeScreenToggleAside() {
 
 // 小屏状态下 显示/隐藏 侧边栏
 function smallScreenToggleAside() {
+  const aside = document.querySelector("aside");
   const iconMenu3 = document.querySelector(".icon-menu3");
   const overlay = document.querySelector(".overlay");
 
@@ -320,6 +319,5 @@ function initializeApp() {
   adjustAsideWidth();
   console.log("开始监听侧边栏宽度调整的resizeHandle");
 }
-
 
 initializeApp();

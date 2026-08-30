@@ -1,5 +1,5 @@
 :root {
-  --enable-numbering: false;
+  --enable-numbering: true;
   --all-expanded: false;
   --aside-width: 320px;
   --header-height: 60px;
@@ -25,7 +25,7 @@
 
   --aside-title-hover-bag: #eee5d3;
   --aside-function-item-hover-bag: #eee5d3;
-  --toc-root-a-hover-bag: #dfb663;
+  --toc-root-a-hover-bag: #eee5d3;
   --resize-handle-hover-bag: #dfb663;
 
   --aside-title-font-color: #924d0ca9;
@@ -37,7 +37,7 @@
 
   --main-bag: #fffefc;
   --header-bag: #fffefc;
-  --header-button-bag: #e5dbc4c0;
+  --header-button-bag: #ebe5d9;
   /* --header-icon-bag: transparent; */
 
   --header-button-hover-bag: #dfb663;
@@ -345,12 +345,14 @@ header {
   border-radius: var(--header-button-border-radius);
 }
 
+
 .icon-Aside:hover, .icon-menu3:hover {
   background-color: var(--header-button-hover-bag);
   transform: translateY(-5px);
   transition: transform 0.3s ease;
   cursor: pointer;
 }
+
 
 .icon-menu3 {
   display: none;
