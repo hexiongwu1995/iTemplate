@@ -111,11 +111,11 @@ function buildToc() {
     stack[stack.length - 1].ol.appendChild(li);
   });
 
-  updateTocText();
+  updateHeadingText();
 }
 
 // 只更新 TOC 和 heading 的文本内容，不重建 DOM 结构
-function updateTocText() {
+function updateHeadingText() {
   const root = document.documentElement;
   if (headings.length === 0) return;
 
@@ -128,19 +128,23 @@ function updateTocText() {
     const arrow = a.querySelector(".icon-arrow2");
 
     if (enableNumbering === "false") {
+
+      heading.textContent = heading.getAttribute("data-original-text");
+
       a.innerHTML = "";
-      a.textContent = heading.getAttribute("data-original-text");
+      a.textContent = heading.textContent;
       if (arrow) {
         a.appendChild(arrow);
       }
     } else if (enableNumbering === "true") {
+      heading.textContent = heading.getAttribute("data-numbering") + ". " + heading.getAttribute("data-original-text");
       a.innerHTML = "";
-      a.textContent = heading.getAttribute("data-numbering") + ". " + heading.getAttribute("data-original-text");
+      a.textContent = heading.textContent;
       if (arrow) {
         a.appendChild(arrow);
       }
     } else {
-      console.log(enableNumbering);
+      console.log("--enable-numbering:",enableNumbering);
       console.log(new Error("--enable-numbering must be true or false"));
     }
   });
@@ -155,10 +159,10 @@ function switchNumbering() {
   if (toggleNumbering) {
     toggleNumbering.addEventListener("click", () => {
       const enableNumbering = getComputedStyle(root).getPropertyValue("--enable-numbering").trim();
-      const toggleNumbering = enableNumbering === "true" ? "false" : "true";
-      root.style.setProperty("--enable-numbering", toggleNumbering);
+      const resetNumbering = enableNumbering === "true" ? "false" : "true";
+      root.style.setProperty("--enable-numbering", resetNumbering);
 
-      updateTocText();
+      updateHeadingText();
     });
   }
 }

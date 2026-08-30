@@ -10,7 +10,7 @@
 // #set heading(numbering: "1.")
 
 = Preliminaries
-\
+testing testing \
 This section introduces the basic definitions required for the subsequent results. We begin by formally defining even and odd integers, which form the foundation of our discussion on number-theoretic properties.
 
 #definition(name: [Even Integer])[
