@@ -30,7 +30,7 @@
       html.script(src: "https://unpkg.com/mathjax@4/startup.js", defer: true)
       html.link(rel: "stylesheet", href: "https://unpkg.com/@hexiongwu1995/itemplate/icon_font/iconfont.css")
       html.link(rel: "stylesheet", href: "../../styles/style.css")
-      // html.script(src: "../../scripts/script.js", defer: true)
+      html.script(src: "../../scripts/script.js", defer: true)
       // html.style(
       //   ```css
       //   html {display: none;}
@@ -52,7 +52,7 @@
             })
           })
           html.nav({
-            html.ol(class: ("toc-root",))[]
+            html.ol(id: "toc-root")[]
           })
           html.div(id: "resize-handle")[]
         })

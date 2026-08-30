@@ -15,8 +15,8 @@
   --aside-title-padding: 10px 20px;
   --aside-function-item-padding: 10px 20px 10px 20px;
   --toc-root-level-1-padding: 10px 20px 10px 20px;
-  --toc-root-level-2-padding: 10px 20px 10px 40px;
-  --toc-root-level-3-padding: 10px 20px 10px 60px;
+  --toc-root-level-2-padding: 10px 20px 10px 30px;
+  --toc-root-level-3-padding: 10px 20px 10px 40px;
 
   --aside-bag: #f5f2ed;
   --aside-title-bag: #ede8dffb;
@@ -223,25 +223,26 @@ nav::-webkit-scrollbar {
 
 #toc-root a {
   font-size: var(--toc-root-a-others-font-size);
-  line-height: 2em;
+  /* line-height: 2em; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  flex-wrap: nowrap;
 }
 
 #toc-root > li > a {
   font-size: var(--toc-root-a-level-1-font-size);
-  padding: var(--toc-root-a-level-1-padding);
+  padding: var(--toc-root-level-1-padding);
   font-weight: 500;
 }
 
 #toc-root > li > ol > li > a {
-  padding: var(--toc-root-a-level-2-padding);
+  padding: var(--toc-root-level-2-padding);
 }
 
 #toc-root > li > ol > li > ol > li > a {
-  padding: var(--toc-root-a-level-3-padding);
+  padding: var(--toc-root-level-3-padding);
 }
 
 #toc-root li a:hover {

@@ -1,9 +1,5 @@
 "use strict";
 
-// 立即隐藏页面，防止 FOUC（无样式内容闪烁）
-// 使用 display:none 确保页面在初始化完成前完全不渲染
-// document.documentElement.style.display = "none";
-
 // 如果 MathJax 不存在，先创建它
 window.MathJax = window.MathJax || {};
 
@@ -15,183 +11,6 @@ window.MathJax.loader = {
 window.MathJax.asciimath = {
   delimiters: [["`", "`"]],
 };
-
-// 存储需要延迟加载的外部脚本
-let deferredScripts = [];
-// 存储需要延迟加载的模块脚本（type="module"），必须在 importmap 注入之后才能加载
-let deferredModuleScripts = [];
-
-// 将当前原始 Typst HTML 转换为套用模板的页面
-function wrapWithTemplate() {
-  // 判断是否使用 online 资源（根据当前页面路径或协议）
-  const isOnline = location.protocol === "https:" || location.protocol === "http:";
-
-  const title = document.title || "document";
-
-  // 更新 title
-  document.title = title + "-online";
-
-  // 清空并重建 body 结构
-  const originalBodyContent = document.body.innerHTML;
-
-  // 分离带 src 的脚本和其他内容
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = originalBodyContent;
-
-  deferredScripts = [];
-  deferredModuleScripts = [];
-  tempDiv.querySelectorAll("script[src]").forEach((script) => {
-    if (script.type === "module") {
-      deferredModuleScripts.push({
-        src: script.getAttribute("src"),
-        type: script.type,
-        defer: script.defer,
-        async: script.async,
-      });
-    } else {
-      deferredScripts.push({
-        src: script.getAttribute("src"),
-        type: script.type,
-        defer: script.defer,
-        async: script.async,
-      });
-    }
-    script.remove();
-  });
-
-  const otherContent = tempDiv.innerHTML;
-
-  document.body.innerHTML = "";
-
-  function loadMathJax() {
-    // 添加 MathJax
-    const mathjaxScript = document.createElement("script");
-    mathjaxScript.src = "https://unpkg.com/mathjax@4/startup.js";
-    mathjaxScript.defer = true;
-    document.head.appendChild(mathjaxScript);
-  }
-
-  function loadImportMap() {
-    // 添加 importmap
-    const importMapScript = document.createElement("script");
-    importMapScript.type = "importmap";
-    importMapScript.textContent = JSON.stringify({
-      imports: {
-        three: "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/",
-      },
-    });
-    document.head.appendChild(importMapScript);
-  }
-
-  const iconFontCssPath = isOnline ? "https://unpkg.com/@hexiongwu1995/itemplate/icon_font/iconfont.css" : "../../dist/icon_font/iconfont.css";
-
-  const styleCssPath = isOnline ? "https://unpkg.com/@hexiongwu1995/itemplate/styles/style.css" : "../../dist/styles/style.css";
-
-  function loadCss(url) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = url;
-    document.head.appendChild(link);
-
-    const promise = new Promise((resolve, reject) => {
-      link.onload = () => {
-        resolve(link);
-        console.log("CSS 加载完成:", url);
-      };
-      link.onerror = () => {
-        reject(new Error(`Failed to load CSS: ${url}`));
-        console.error("CSS 加载失败:", url);
-      };
-    });
-    return promise;
-  }
-
-  function constructBody() {
-    // 构建模板 DOM 结构
-    const container = document.createElement("div");
-    container.className = "container";
-
-    container.innerHTML = `
-    <aside>
-      <div class="function-panel">
-        <span class="aside-title">${title}</span>
-        <span class="function-item">
-          <span class="iconfont icon-Numbering">标题序号</span>
-          <span class="iconfont icon-expand-all">展开目录</span>
-        </span>
-      </div>
-      <nav>
-        <ol id="toc-root"></ol>
-      </nav>
-      <div id="resize-handle"></div>
-    </aside>
-    <div class="overlay"></div>
-    <main>
-      <header>
-        <span class="header-left">
-          <span class="iconfont icon-Aside"></span>
-          <span class="iconfont icon-menu3"></span>
-        </span>
-        <span class="header-middle"> </span>
-        <span class="header-right">
-          <a class="iconfont-home">
-            <span class="iconfont icon-home"></span>
-          </a>
-          <a class="iconfont-github" href="https://github.com/hexiongwu1995/" target="_blank">
-            <span class="iconfont icon-github"></span>
-          </a>
-          <a class="iconfont-print" href="#">
-            <span class="iconfont icon-print"></span>
-          </a>
-          <span class="iconfont icon-paintbrush"></span>
-        </span>
-      </header>
-      <article>${otherContent}</article>
-    </main>
-  `;
-
-    document.body.appendChild(container);
-  }
-
-  const promise1 = loadCss(iconFontCssPath)
-    .then(function(){console.log(" iconfont.css 加载完成")})
-    .catch((error) => {
-      console.error("iconfont.css 加载失败:", error);
-      throw error; // 继续向上传播，阻止后续执行
-    });
-
-  const promise2 = loadCss(styleCssPath)
-  .then(function(){console.log(" style.css 加载完成")})
-  .catch((error) => {
-    console.error("style.css 加载失败:", error);
-    throw error; // 继续向上传播，阻止后续执行
-  })
-
-  return Promise.all([promise1, promise2])
-    .then(() => {
-      console.log("所有 CSS 都加载完成");
-    })
-    .catch((error) => {
-      console.error("存在 CSS 资源加载失败:", error);
-      throw error;
-    })
-    .then(() => {
-      // 只有 CSS 加载成功后才会执行到这里
-      // 在 .then() 的回调里，同步代码抛出的错误会自动变成 Promise 的 rejection
-      // 不需要手动 try...catch + throw。
-        loadMathJax();
-        console.log("MathJax 加载完成");
-        loadImportMap();
-        console.log("importmap 加载完成");
-        constructBody();
-        console.log("已经重构 Body 结构"); 
-    })
-    .catch((error) => {
-      console.error("套用模板失败:", error);
-      throw error;
-    })
-}
 
 function getLevel(heading) {
   return parseInt(heading.tagName[1], 10);
@@ -327,10 +146,10 @@ function updateTocText() {
   });
 }
 
-function setupEventListeners() {
-  const root = document.documentElement;
+const root = document.documentElement;
 
-  // 显示/隐藏目录编号
+// 显示/隐藏目录编号
+function switchNumbering() {
   const toggleNumbering = document.querySelector(".icon-Numbering");
 
   if (toggleNumbering) {
@@ -342,8 +161,10 @@ function setupEventListeners() {
       updateTocText();
     });
   }
+}
 
-  // 点击arrow切换目录展开状态
+// 点击arrow切换目录展开状态
+function toggleNestedToc() {
   const nav = document.querySelector("nav");
   if (nav) {
     nav.addEventListener("click", (e) => {
@@ -362,8 +183,10 @@ function setupEventListeners() {
       arrow.classList.toggle("rotate-90");
     });
   }
+}
 
-  // 展开/收起 所有目录
+// 展开/收起 所有目录
+function toggleAllToc() {
   const iconExpand = document.querySelector(".icon-expand-all");
   const tocRoot = document.getElementById("toc-root");
 
@@ -394,8 +217,10 @@ function setupEventListeners() {
       }
     });
   }
+}
 
-  // 大屏状态下 显示/隐藏 侧边栏
+// 大屏状态下 显示/隐藏 侧边栏
+function largeScreenToggleAside() {
   const iconAside = document.querySelector(".icon-Aside");
   const aside = document.querySelector("aside");
   const main = document.querySelector("main");
@@ -407,8 +232,10 @@ function setupEventListeners() {
       aside.classList.toggle("hidden");
     });
   }
+}
 
-  // 小屏状态下 显示/隐藏 侧边栏
+// 小屏状态下 显示/隐藏 侧边栏
+function smallScreenToggleAside() {
   const iconMenu3 = document.querySelector(".icon-menu3");
   const overlay = document.querySelector(".overlay");
 
@@ -427,8 +254,10 @@ function setupEventListeners() {
       overlay.classList.remove("show");
     });
   }
+}
 
-  // 侧边栏宽度调整
+// 侧边栏宽度调整
+function adjustAsideWidth() {
   const resizeHandle = document.querySelector("#resize-handle");
 
   if (resizeHandle) {
@@ -471,47 +300,22 @@ function setupEventListeners() {
 
 function initializeApp() {
   initHeadings();
+  console.log("已为标题添加id, 多级序号属性和原始标题内容属性");
   buildToc();
-  setupEventListeners(); // 把事件监听绑定也封装起来
+  console.log("已构建目录");
+  switchNumbering();
+  console.log("开始监听目录编号显示/隐藏的切换按钮");
+  toggleNestedToc();
+  console.log("开始监听目录展开/收起的切换箭头");
+  toggleAllToc();
+  console.log("开始监听目录全部展开/收起的切换按钮");
+  largeScreenToggleAside();
+  console.log("开始监听大屏状态下侧边栏显示/隐藏的切换按钮");
+  smallScreenToggleAside();
+  console.log("开始监听小屏状态下侧边栏显示/隐藏的切换按钮");
+  adjustAsideWidth();
+  console.log("开始监听侧边栏宽度调整的resizeHandle");
 }
 
-function loadDeferredScripts(scripts) {
-  scripts.forEach(({ src, type, defer, async }) => {
-    const script = document.createElement("script");
-    script.src = src;
-    if (type) script.type = type;
-    if (defer) script.defer = true;
-    if (async) script.async = true;
-    document.body.appendChild(script);
-  });
-}
 
-function loadDeferredModuleScripts(scripts) {
-  scripts.forEach(({ src, type }) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.type = "module";
-    document.body.appendChild(script);
-  });
-}
-
-// 自动套用模板
-wrapWithTemplate()
-  .then(() => {
-    initializeApp();
-    // 所有初始化完成后，显示页面
-    document.documentElement.classList.add("loaded");
-    // 延迟加载原页面中的外部脚本（必须在 importmap 注入之后）
-    loadDeferredScripts(deferredScripts);
-    loadDeferredModuleScripts(deferredModuleScripts);
-  })
-  .catch((error) => {
-    console.error("❌ 初始化应用失败:", error);
-    // 即使失败也显示页面，避免页面一直隐藏
-    document.documentElement.classList.add("loaded");
-    // 即使失败也加载脚本，避免页面功能缺失
-    loadDeferredScripts(deferredScripts);
-    loadDeferredModuleScripts(deferredModuleScripts);
-    throw error;
-    // 重新抛出，让调用方也能捕获
-  });
+initializeApp();
