@@ -1,8 +1,8 @@
 
-#import "../../dist/templates/iTemplate.typ":*
-#show: contents => itemplate(contents)
+#import "./iTemplate.typ": *
+#show: contents => itemplate(title: "theoframe", contents)
 
-#import "@preview/theoframe:0.3.7":*
+#import "@preview/theoframe:0.3.7": *
 #show: theoframe-setup
 // #show: theoframe-setup.with(theme: (style: "minimal", color: rgb("#067300")))
 
@@ -10,7 +10,7 @@
 // #set heading(numbering: "1.")
 
 = Preliminaries
-
+testing testing testing testing\
 This section introduces the basic definitions required for the subsequent results. We begin by formally defining even and odd integers, which form the foundation of our discussion on number-theoretic properties.
 
 #definition(name: [Even Integer])[
@@ -21,11 +21,11 @@ This section introduces the basic definitions required for the subsequent result
   An integer $n$ is called *odd* if it is not divisible by $2$, i.e., there exists an integer $k$ such that $n = 2k + 1$.
 ]<def:odd>
 
-== A heading 
+== A heading
 
 #lorem(10)
 
-=== Another heading 
+=== Another heading
 
 #lorem(10)
 
@@ -51,11 +51,11 @@ Having established the basic definitions, we now present the main theoretical re
   This follows directly from @thm:sum-even by induction on the number of terms.
 ]
 
-== A heading 
+== A heading
 
 #lorem(10)
 
-=== Another heading 
+=== Another heading
 
 #lorem(10)
 
@@ -79,20 +79,23 @@ To further illustrate the concepts introduced above, we provide a concrete examp
 ]<sol:sum-odd>
 
 
-== A heading 
+== A heading
 
 #lorem(10)
 
 
-=== Another heading 
+=== Another heading
 
 #lorem(10)
 
 
 
 
-#html.elem("div", attrs: (style: "background: white; margin-top: 50px; width: 100%; height: 30vh", id:"three-orbital-cube"))[]
-#html.script(type:"module", src: "./three-orbital-cube.js")
+#html.elem("div", attrs: (
+  style: "background: white; margin-top: 50px; width: 100%; height: 30vh",
+  id: "three-orbital-cube",
+))[]
+#html.script(type: "module", src: "./three-orbital-cube.js")
 
 
 
