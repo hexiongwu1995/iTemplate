@@ -5,7 +5,7 @@ This package automatically adds an HTML template when exporting Typst documents 
 # Usage
 
 ```typst
-#import "@preview/itemplate: 0.3.0": *
+#import "@preview/itemplate: 0.3.1": *
 #show: contents => itemplate(title: "itemplate", contents)
 
 = #lorem(3)
@@ -30,9 +30,9 @@ This package automatically adds an HTML template when exporting Typst documents 
 ))[]
 #html.script(
   type: "module",
-  src: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.0/examples/theoframe/three-orbital-cube.js",
+  src: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.1/examples/theoframe/three-orbital-cube.js",
 )
 
 ```
 
-<img src="./images/image.png" alt="iTemplate" width="900" />
+<img src="./assets/image.png" alt="itemplate" width="900" />
