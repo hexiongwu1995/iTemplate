@@ -1,6 +1,6 @@
 #import "itemplate.typ": *
-// #import "@preview/itemplate: 0.3.1": *
-#show: contents => itemplate(title: "iTemplate", contents)
+// #import "@preview/itemplate: 0.3.2": *
+#show: contents => itemplate(title: "itemplate", contents)
 
 = #lorem(3)
 
@@ -24,7 +24,7 @@
 ))[]
 #html.script(
   type: "module",
-  src: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.1/examples/theoframe/three-orbital-cube.js",
+  src: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.2/examples/itemplate/three-orbital-cube.js",
 )
 
 
