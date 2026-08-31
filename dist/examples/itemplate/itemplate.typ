@@ -37,17 +37,16 @@
         };
         ```.text,
       )
+
       html.script(src: "https://unpkg.com/mathjax@4/startup.js", defer: true)
-      
-      html.link(rel: "stylesheet", href: "https://unpkg.com/@hexiongwu1995/itemplate/icon_font/iconfont.css")
-      html.link(rel: "stylesheet", href: "../../styles/style.css")
-      html.script(src: "../../scripts/script.js", defer: true)
-      // html.style(
-      //   ```css
-      //   html {display: none;}
-      //   html.loaded { display: block; }
-      //   ```.text,
-      // )
+
+      html.link(rel: "stylesheet", href: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.1/icon_font/iconfont.css")
+
+      html.link(rel: "stylesheet", href: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.1/styles/style.css")
+      // html.link(rel: "stylesheet", href: "./styles/style.css")
+
+      html.script(src: "https://unpkg.com/@hexiongwu1995/itemplate@0.3.1/scripts/script.js", defer: true)
+      // html.script(src: "./scripts/script.js", defer: true)
     })
     html.body({
       html.div(class: ("container",), {
