@@ -1,5 +1,5 @@
 #import "itemplate.typ": *
-// #import "@preview/iTemplate: 0.3.0": *
+// #import "@preview/itemplate: 0.3.1": *
 #show: contents => itemplate(title: "iTemplate", contents)
 
 = #lorem(3)
