@@ -31,7 +31,7 @@
   --aside-title-font-color: #924d0ca9;
   /* --aside-normal-font-color: #2d2d2d; */
   --aside-function-item-font-color: #69390963;
-  --toc-root-a-font-color: #69390963;
+  --toc-root-a-font-color: #542d06;
 
   --aside-divider-color: #eae5defe;
 
@@ -51,7 +51,7 @@
   --active-font-color: #0574ea;
 
   --aside-title-font-size: 1.2rem;
-  --aside-function-icon-font-size: 1.0rem;
+  --aside-function-icon-font-size: 1rem;
   --aside-function-text-font-size: 0.8rem;
   /* --toc-root-a-line-height: 1.5rem; */
   --toc-root-a-level-1-font-size: 1rem;
@@ -110,7 +110,7 @@ aside.hidden {
   width: 0;
 }
 
-.aside-title-large-screen, 
+.aside-title-large-screen,
 .aside-title-small-screen {
   display: block;
   width: 100%;
@@ -126,7 +126,7 @@ aside.hidden {
   white-space: nowrap;
 }
 
-.aside-title-large-screen:hover, 
+.aside-title-large-screen:hover,
 .aside-title-small-screen:hover {
   background-color: var(--aside-title-hover-bag);
 }
@@ -165,6 +165,8 @@ aside.hidden {
   align-items: center;
   flex-wrap: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .icon-Numbering,
@@ -229,6 +231,10 @@ nav::-webkit-scrollbar {
   align-items: center;
   gap: 10px;
   flex-wrap: nowrap;
+  color: var(--toc-root-a-font-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #toc-root > li > a {
@@ -251,7 +257,7 @@ nav::-webkit-scrollbar {
 
 aside a {
   text-decoration: none;
-  color: var(--aside-normal-font-color);
+  /* color: var(--aside-normal-font-color); */
 }
 
 #toc-root li ol {
@@ -337,7 +343,8 @@ header {
   font-size: var(--header-icon-font-size);
 }
 
-.icon-Aside, .icon-menu3 {
+.icon-Aside,
+.icon-menu3 {
   font-size: var(--header-button-font-size);
   padding: var(--header-button-padding);
   background-color: var(--header-button-bag);
@@ -345,14 +352,13 @@ header {
   border-radius: var(--header-button-border-radius);
 }
 
-
-.icon-Aside:hover, .icon-menu3:hover {
+.icon-Aside:hover,
+.icon-menu3:hover {
   background-color: var(--header-button-hover-bag);
   transform: translateY(-5px);
   transition: transform 0.3s ease;
   cursor: pointer;
 }
-
 
 .icon-menu3 {
   display: none;
@@ -399,13 +405,13 @@ article a {
     transition: transform 0.3s ease-in-out;
   }
 
-.aside-title-large-screen {
-  display:none;
-}
+  .aside-title-large-screen {
+    display: none;
+  }
 
-.aside-title-small-screen {
-  display: block;
-}
+  .aside-title-small-screen {
+    display: block;
+  }
 
   #resize-handle {
     display: none;
@@ -463,13 +469,11 @@ article a {
     bottom: 100px;
   }
 
-
   .icon-menu3:hover {
     transform: rotateX(180deg);
     transition: transform 0.3s ease;
     cursor: pointer;
   }
-
 }
 
 /* 行间距和段间距 */

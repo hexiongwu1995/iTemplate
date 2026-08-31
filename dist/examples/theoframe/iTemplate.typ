@@ -27,7 +27,18 @@
         }
         ```.text,
       )
+
+      html.script(
+        ```js
+        MathJax = {
+          loader: {
+            load: ['input/asciimath', "input/mml", 'output/chtml', 'ui/menu']
+          }
+        };
+        ```.text,
+      )
       html.script(src: "https://unpkg.com/mathjax@4/startup.js", defer: true)
+      
       html.link(rel: "stylesheet", href: "https://unpkg.com/@hexiongwu1995/itemplate/icon_font/iconfont.css")
       html.link(rel: "stylesheet", href: "../../styles/style.css")
       html.script(src: "../../scripts/script.js", defer: true)
@@ -68,10 +79,10 @@
               html.a(class: ("iconfont-home",), {
                 html.span(class: ("iconfont", "icon-home"))[]
               })
-              html.a(class: ("iconfont-github",), href: "https://github.com/hexiongwu1995/", target: "_blank", {
+              html.a(class: ("iconfont-github",), {
                 html.span(class: ("iconfont", "icon-github"))[]
               })
-              html.a(class: ("iconfont-print",), href: "#", {
+              html.a(class: ("iconfont-print",), {
                 html.span(class: ("iconfont", "icon-print"))[]
               })
               html.a(class: ("iconfont-paintbrush",), {

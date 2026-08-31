@@ -1,31 +1,12 @@
 "use strict";
 
-// 如果 MathJax 不存在，先创建它
-window.MathJax = window.MathJax || {};
-
-// 然后修改它的属性，而不是重新赋值
-window.MathJax.loader = {
-  load: ["input/mml", "input/asciimath", "output/chtml"],
-};
-
-window.MathJax.asciimath = {
-  delimiters: [["`", "`"]],
-};
-
 function getLevel(heading) {
   return parseInt(heading.tagName[1], 10);
 }
 
-// 重新获取关键 DOM 引用
-
-let article;
-
-let headings = [];
-
 // 给每个 heading 生成id、添加numbering和data-original-text属性
 function initHeadings() {
-  article = document.querySelector("article");
-  headings = Array.from(article.querySelectorAll("h2, h3, h4"));
+  const headings = Array.from(document.querySelectorAll("h2, h3, h4"));
 
   const counters = [];
 
@@ -57,6 +38,7 @@ function initHeadings() {
 const tocLinkMap = new Map();
 
 function buildToc() {
+  const headings = Array.from(document.querySelectorAll("h2, h3, h4"));
   const tocRoot = document.getElementById("toc-root");
   if (headings.length === 0) return;
 
@@ -117,6 +99,7 @@ function buildToc() {
 // 只更新 TOC 和 heading 的文本内容，不重建 DOM 结构
 function updateHeadingText() {
   const root = document.documentElement;
+  const headings = Array.from(document.querySelectorAll("h2, h3, h4"));
   if (headings.length === 0) return;
 
   const enableNumbering = getComputedStyle(root).getPropertyValue("--enable-numbering").trim();
@@ -149,14 +132,17 @@ function updateHeadingText() {
   });
 }
 
-const root = document.documentElement;
+
 
 // 显示/隐藏目录编号
 function switchNumbering() {
+  const root = document.documentElement;
   const toggleNumbering = document.querySelector(".icon-Numbering");
+  const iconNumbering = document.querySelector(".icon-Numbering");
 
   if (toggleNumbering) {
     toggleNumbering.addEventListener("click", () => {
+      iconNumbering.style.userSelect = "none";
       const enableNumbering = getComputedStyle(root).getPropertyValue("--enable-numbering").trim();
       const resetNumbering = enableNumbering === "true" ? "false" : "true";
       root.style.setProperty("--enable-numbering", resetNumbering);
@@ -190,11 +176,13 @@ function toggleNestedToc() {
 
 // 展开/收起 所有目录
 function toggleAllToc() {
+  const root = document.documentElement;
   const iconExpand = document.querySelector(".icon-expand-all");
   const tocRoot = document.getElementById("toc-root");
 
   if (iconExpand) {
     iconExpand.addEventListener("click", () => {
+      iconExpand.style.userSelect = "none";
       const ol = tocRoot.querySelectorAll("ol");
       const arrows = tocRoot.querySelectorAll(".icon-arrow2");
       const allExpandedValue = getComputedStyle(root).getPropertyValue("--all-expanded").trim();
@@ -261,12 +249,16 @@ function smallScreenToggleAside() {
 
 // 侧边栏宽度调整
 function adjustAsideWidth() {
+  const root = document.documentElement;
   const resizeHandle = document.querySelector("#resize-handle");
+  const asideEl = document.querySelector("aside");
+  const mainEl = document.querySelector("main");
 
-  if (resizeHandle) {
+  if (resizeHandle && asideEl && mainEl) {
     let isResizing = false;
     let startX = 0;
     let startWidth = 0;
+    let rafId = null;
     const minWidth = 0;
     const maxWidth = 500;
 
@@ -276,26 +268,35 @@ function adjustAsideWidth() {
       const currentWidth = parseInt(getComputedStyle(root).getPropertyValue("--aside-width").trim(), 10);
       startWidth = currentWidth;
       resizeHandle.classList.add("resizing");
-      aside.classList.add("resizing");
-      main.classList.add("resizing");
+      asideEl.classList.add("resizing");
+      mainEl.classList.add("resizing");
       document.body.style.userSelect = "none";
     });
 
     document.addEventListener("mousemove", (e) => {
       if (!isResizing) return;
-      const delta = e.clientX - startX;
-      let newWidth = startWidth + delta;
-      if (newWidth < minWidth) newWidth = minWidth;
-      if (newWidth > maxWidth) newWidth = maxWidth;
-      root.style.setProperty("--aside-width", newWidth + "px");
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const delta = e.clientX - startX;
+        let newWidth = startWidth + delta;
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        root.style.setProperty("--aside-width", newWidth + "px");
+      });
     });
 
     document.addEventListener("mouseup", () => {
       if (!isResizing) return;
       isResizing = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
       resizeHandle.classList.remove("resizing");
-      aside.classList.remove("resizing");
-      main.classList.remove("resizing");
+      asideEl.classList.remove("resizing");
+      mainEl.classList.remove("resizing");
       document.body.style.userSelect = "";
     });
   }
