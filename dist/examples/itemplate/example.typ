@@ -16,7 +16,7 @@
 
 == #lorem(3)
 
-#lorem(10)
+#lorem(50)
 
 #html.elem("div", attrs: (
   style: "background: white; margin-top: 50px; width: 100%; height: 30vh",
