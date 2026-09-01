@@ -6,17 +6,21 @@
 
 #lorem(20)
 
-// <iframe width="560" height="360" src="//player.bilibili.com/player.html?isOutside=true&aid=901303033&bvid=BV1KN4y1A7E5&cid=852699275&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 
 #html.iframe(
-  width: 560, 
-  height: 360,
-  src: "//player.bilibili.com/player.html?isOutside=true&aid=901303033&bvid=BV1KN4y1A7E5&cid=852699275&p=1",
-  // frameborder: 0,
-  allowfullscreen: true,
-  // scrolling: "no",
-  // framespacing: 0,
-)
+      style: "width: 100%; height: 400px;",
+      // width: ,
+      // height: auto,
+      src: "//player.bilibili.com/player.html?isOutside=true&aid=115948078040084&bvid=BV1udzrBeEfx&cid=35578053293&p=1",
+      // frameborder: 0,
+      allowfullscreen: true,
+      // scrolling: "no",
+      // framespacing: 0,
+    )
+  },
+
+
+
 
 == #lorem(3)
 
