@@ -375,6 +375,8 @@ article {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px 20px 150px 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 article li {
