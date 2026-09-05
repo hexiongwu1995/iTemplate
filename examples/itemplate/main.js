@@ -5,7 +5,7 @@ import { arrowHelper } from "./euler.js";
 import { torus } from "./torus.js";
 
 
-const canvas = document.getElementById("canvas-lighting");
+const canvas = document.getElementById("canvas-main");
 const width = canvas.clientWidth;
 const height = canvas.clientHeight;
 

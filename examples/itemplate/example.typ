@@ -14,7 +14,7 @@
 #block(
   html.canvas(
     style: "width: 100%;aspect-ratio: 1.25; margin: 0 auto;",
-    id: "canvas-lighting",
+    id: "canvas-main",
   ),
 )
 
