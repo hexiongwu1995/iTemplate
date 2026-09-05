@@ -76,13 +76,30 @@
   top: 0px;
   right: 0px;
   z-index: 10;
+}
+
+
+.lil-gui {
   --background-color: #dddddd;
   --title-background-color: #cccccc;
   --title-text-color: #000000;
   --widget-color: #cccccc;
   --hover-color: #bbbbbb;
   --text-color: #000000;
+  --string-color: #017005;
+  --number-color: #090909;
 }
+
+.lil-gui .title {
+  background-color: #cccccc;
+}
+
+
+.lil-gui .controller {
+  background-color: #dddddd;
+}
+
+
 
 @media screen and (max-width: 700px) {
   .lil-gui.root {
