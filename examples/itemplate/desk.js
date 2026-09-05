@@ -1,24 +1,8 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
-const canvas = document.getElementById("canvas-lighting");
-
-const width = canvas.clientWidth;
-const height = canvas.clientHeight;
 
 const deskLength = 1.4;
 const deskWidth = 0.7;
 const deskThickness = 0.025;
-const torusOuterRadius = 0.2;
-const torusInnerRadius = 0.05;
-
-const camera = new THREE.PerspectiveCamera(60, (1 * width) / (1 * height), 0.01, 100);
-camera.position.set(0, 0.5, 1.2);
-camera.lookAt(0, 0, 0);
-
-const scene = new THREE.Scene();
-
-const gridHelper = new THREE.GridHelper(2, 20, 0xff0000)
 
 const textureLoader = new THREE.TextureLoader();
 
@@ -36,7 +20,7 @@ deskTexture.colorSpace = THREE.SRGBColorSpace;
 // 统一设置纹理变换：旋转 90° + 平铺 2 次
 // 所有配套贴图必须同步变换，否则 BaseColor 与 Normal/Roughness 会对不上
 const allTextures = [deskTexture, aoTexture, displacementTexture, metalnessTexture, normalTexture, roughnessTexture];
-allTextures.forEach(t => {
+allTextures.forEach((t) => {
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.center.set(0.5, 0.5);
   t.rotation = Math.PI / 2;
@@ -45,7 +29,7 @@ allTextures.forEach(t => {
 
 const deskGeometry = new THREE.BoxGeometry(deskLength, deskThickness, deskWidth, 64, 4, 32);
 // aoMap 需要第二组 UV 坐标才能正确显示
-deskGeometry.setAttribute('uv2', new THREE.BufferAttribute(deskGeometry.attributes.uv.array.slice(), 2));
+deskGeometry.setAttribute("uv2", new THREE.BufferAttribute(deskGeometry.attributes.uv.array.slice(), 2));
 
 const desk = new THREE.Mesh(
   deskGeometry,
@@ -59,41 +43,10 @@ const desk = new THREE.Mesh(
     roughnessMap: roughnessTexture,
     metalness: 1,
     roughness: 1,
-   })
+  }),
 );
 
 desk.position.set(0, 0, 0);
 // desk.rotation.x = - Math.PI / 2;
 
-const torus = new THREE.Mesh(
-  new THREE.TorusGeometry(torusOuterRadius, torusInnerRadius, 12, 48, 7 /4 * Math.PI, 0, 2 *Math.PI), 
-  new THREE.MeshStandardMaterial({ color: 0x66aaaa, roughness: 0.5, metalness: 0.5, wireframe: true })
-);
-
-torus.position.set(0, torusOuterRadius + torusInnerRadius + deskThickness / 2, 0);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(1, 1, 1);
-
-scene.add(desk, torus, gridHelper, ambientLight, directionalLight);
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setClearColor(0x666666, 0.2);
-renderer.setSize(width, height);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.render(scene, camera);
-// renderer.setAnimationLoop(animate);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.autoRotate = true;
-controls.enableDamping = true;
-
-function animate() {
-  requestAnimationFrame(animate);
-  torus.rotation.y += (16.6 / 1000) * ( 2 * Math.PI / 20) ;
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-animate();
+export { desk, deskThickness };
