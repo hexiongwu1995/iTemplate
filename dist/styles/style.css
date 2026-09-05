@@ -71,6 +71,19 @@
   /* --article-p-margin-top: 1.5rem; */
 }
 
+.lil-gui {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 10;
+  --background-color: #dddddd;
+  --title-background-color: #cccccc;
+  --title-text-color: #000000;
+  --widget-color: #cccccc;
+  --hover-color: #bbbbbb;
+  --text-color: #000000;
+}
+
 * {
   margin: 0;
   padding: 0;

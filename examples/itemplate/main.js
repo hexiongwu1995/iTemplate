@@ -72,18 +72,18 @@ let eventObj = {
 };
 
 const gui = new GUI({ container: wrapper });
-gui.domElement.style.cssText = `
-position: absolute; 
-top: 0px; 
-right: 0px; 
-z-index: 10;
---background-color: #dddddd;
---title-background-color: #cccccc;
---title-text-color: #000000;
---widget-color: #cccccc;
---hover-color: #bbbbbb;
---text-color: #000000;
-`;
+// gui.domElement.style.cssText = `
+// position: absolute; 
+// top: 0px; 
+// right: 0px; 
+// z-index: 10;
+// --background-color: #dddddd;
+// --title-background-color: #cccccc;
+// --title-text-color: #000000;
+// --widget-color: #cccccc;
+// --hover-color: #bbbbbb;
+// --text-color: #000000;
+// `;
 
 gui.title("Controls");
 gui.add(eventObj, "FullScreen");
