@@ -6,12 +6,12 @@ const deskThickness = 0.025;
 
 const textureLoader = new THREE.TextureLoader();
 
-const deskTexture = textureLoader.load("../../../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_BaseColor.jpg");
-const aoTexture = textureLoader.load("../../../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_AmbientOcclusion.jpg");
-const displacementTexture = textureLoader.load("../../../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Displacement.jpg");
-const metalnessTexture = textureLoader.load("../../../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Metallic.jpg");
-const normalTexture = textureLoader.load("../../../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Normal.png");
-const roughnessTexture = textureLoader.load("../../../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Roughness.jpg");
+const deskTexture = textureLoader.load("../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_BaseColor.jpg");
+const aoTexture = textureLoader.load("../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_AmbientOcclusion.jpg");
+const displacementTexture = textureLoader.load("../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Displacement.jpg");
+const metalnessTexture = textureLoader.load("../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Metallic.jpg");
+const normalTexture = textureLoader.load("../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Normal.png");
+const roughnessTexture = textureLoader.load("../Textures/Poliigon_WoodVeneerOak_7760/2K/Poliigon_WoodVeneerOak_7760_Roughness.jpg");
 
 // 设置纹理颜色空间
 // 颜色类贴图(BaseColor)使用 SRGB；数据类贴图(AO/Roughness/Metallic/Normal/Displacement)保持线性(NoColorSpace)

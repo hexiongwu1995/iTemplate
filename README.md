@@ -35,4 +35,4 @@ This package automatically adds an HTML template when exporting Typst documents 
 
 ```
 
-<img src="./assets/image.png" alt="itemplate" width="900" />
+<img src="./images/image.png" alt="itemplate" width="900" />

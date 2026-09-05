@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'dist/**'
+      - 'examples/**'
       - '.github/workflows/deploy.yml'
 
 jobs:
@@ -22,6 +23,6 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: examples
 
       - uses: actions/deploy-pages@v5
