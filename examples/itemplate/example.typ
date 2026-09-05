@@ -12,9 +12,13 @@
 
 
 #block(
-  html.canvas(
-    style: "width: 100%;aspect-ratio: 1.25; margin: 0 auto;",
-    id: "canvas-main",
+  html.div(
+    style: "position: relative;",
+    class: "canvas-wrapper",
+    html.canvas(
+      style: "width: 100%;aspect-ratio: 1.25; margin: 0 auto;",
+      id: "canvas-main",
+    ),
   ),
 )
 

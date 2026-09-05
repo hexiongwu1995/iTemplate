@@ -31,7 +31,7 @@ scene.add(desk, torus, gridHelper, axesHelper, arrowHelper, ambientLight, direct
 
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setClearColor(0x666666, 0.2);
+renderer.setClearColor(0xeeeeee, 1);
 renderer.setSize(width, height, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.render(scene, camera);
@@ -61,3 +61,13 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(width, height, false);
 });
+
+const btn = document.createElement("button");
+btn.textContent = "FullScreen";
+btn.style = "position: absolute; bottom: 10px; right: 10px;";
+btn.addEventListener("click", () => {
+  renderer.domElement.requestFullscreen();
+});
+
+const wrapper = document.querySelector(".canvas-wrapper");
+wrapper.appendChild(btn);
