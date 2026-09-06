@@ -4,7 +4,7 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import { desk, deskThickness } from "./desk.js";
 import { arrowHelper } from "./euler.js";
 import { torus } from "./torus.js";
-
+const dpr = window.devicePixelRatio;
 const canvas = document.getElementById("canvas-main");
 const width = canvas.clientWidth;
 const height = canvas.clientHeight;
@@ -26,6 +26,7 @@ scene.add(desk, torus, gridHelper, axesHelper, arrowHelper, ambientLight, direct
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setClearColor(0xfafafa, 1);
+renderer.setPixelRatio(dpr);
 renderer.setSize(width, height, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.render(scene, camera);
