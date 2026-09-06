@@ -21,10 +21,10 @@ deskTexture.colorSpace = THREE.SRGBColorSpace;
 // 所有配套贴图必须同步变换，否则 BaseColor 与 Normal/Roughness 会对不上
 const allTextures = [deskTexture, aoTexture, displacementTexture, metalnessTexture, normalTexture, roughnessTexture];
 allTextures.forEach((t) => {
-  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  // t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.center.set(0.5, 0.5);
   t.rotation = Math.PI / 2;
-  t.repeat.set(1, 2);
+  // t.repeat.set(1, 2);
 });
 
 const deskGeometry = new THREE.BoxGeometry(deskLength, deskThickness, deskWidth, 64, 4, 32);
@@ -36,13 +36,13 @@ const desk = new THREE.Mesh(
   new THREE.MeshStandardMaterial({
     map: deskTexture,
     aoMap: aoTexture,
-    displacementMap: displacementTexture,
-    displacementScale: 0.002,
+    // displacementMap: displacementTexture,
+    // displacementScale: 0.002,
     metalnessMap: metalnessTexture,
     normalMap: normalTexture,
     roughnessMap: roughnessTexture,
-    metalness: 1,
-    roughness: 1,
+    metalness: 0,
+    roughness: 0.1,
   }),
 );
 
