@@ -76,6 +76,7 @@
   top: 0px;
   right: 0px;
   z-index: 10;
+  --width: 25%;
 }
 
 
@@ -101,7 +102,7 @@
 
 
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
   .lil-gui.root {
     display: none;
   }
@@ -408,7 +409,7 @@ header a {
 article {
   width: 100%;
   height: auto;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 20px auto;
   padding: 20px 20px 150px 20px;
   overflow-x: hidden;
@@ -425,7 +426,7 @@ article a {
   color: var(--article-font-color);
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   :root {
     --aside-width: 300px;
     --header-height: 0;
@@ -545,7 +546,7 @@ div.math {
   font-size: 1rem;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   span.math {
     font-size: 1rem;
   }

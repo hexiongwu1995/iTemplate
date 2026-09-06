@@ -74,10 +74,12 @@ let eventObj = {
 const gui = new GUI({ container: wrapper });
 
 gui.title("Controls");
+gui.close();
 gui.add(eventObj, "FullScreen");
 gui.add(eventObj, "ExitFullScreen");
-// let folder = gui.addFolder("OrbitControls");
-// folder.add(controls, "autoRotate").name("Auto Rotate");
-// folder.add(controls, "autoRotateSpeed", 0.1, 5).name("Auto Rotate Speed");
+let folder = gui.addFolder("OrbitControls");
+// folder.close();
+folder.add(controls, "autoRotate").name("Auto Rotate");
+folder.add(controls, "autoRotateSpeed", 0.1, 5).name("Auto Rotate Speed");
 
 
