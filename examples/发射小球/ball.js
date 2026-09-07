@@ -1,9 +1,6 @@
 import * as THREE from "three";
-import { deskThickness } from "./desk.js";
 
-function createBall(radius = 0.03) {
-
-const ballRadius = radius;
+function createBall(ballRadius = 0.03) {
 
 const loader = new THREE.TextureLoader();
 const ballTexture = loader.load("../../Textures/earth_day_4096.jpg");

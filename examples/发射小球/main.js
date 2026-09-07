@@ -8,29 +8,26 @@ const canvas = document.getElementById("canvas-main");
 const width = canvas.clientWidth;
 const height = canvas.clientHeight;
 const ballRadius = 0.08;
-const ballHeight = ballRadius;
 
 const camera = new THREE.PerspectiveCamera(60, (1 * width) / (1 * height), 0.01, 100);
 camera.position.set(0, 1, 1);
 camera.lookAt(0, 0, 0);
 
 const scene = new THREE.Scene();
-// scene.add(desk);
+
 scene.add(floor);
 floor.position.set(0, -floorHeight / 2, 0);
 
 const ball1 = createBall(ballRadius);
-ball1.position.set(-0.3, ballHeight, 0);
+ball1.position.set(-0.3, ballRadius, 0);
 scene.add(ball1);
 const ball2 = createBall(ballRadius);
-ball2.position.set(0, ballHeight, 0);
+ball2.position.set(0, ballRadius, 0);
 scene.add(ball2);
 const ball3 = createBall(ballRadius);
-ball3.position.set(0.3, ballHeight, 0);
+ball3.position.set(0.3, ballRadius, 0);
 scene.add(ball3);
 
-// desk.castShadow = true;
-// desk.receiveShadow = true;
 
 const cameraHelper = new THREE.CameraHelper(camera);
 // scene.add(cameraHelper);
@@ -51,7 +48,7 @@ scene.add(ambientLight);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
 directionalLight.position.set(0.5, 0.5, 0.5);
 directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.set(4096, 4096);
+directionalLight.shadow.mapSize.set(2048, 2048);
 scene.add(directionalLight);
 
 const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.05, 0xff00ff);
@@ -122,9 +119,9 @@ function animate() {
 
   timer.update();
 
-  ball1.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed())) + ballHeight;
-  ball2.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed() + Math.PI / 4)) + ballHeight;
-  ball3.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed() + Math.PI / 2)) + ballHeight;
+  ball1.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed())) + ballRadius;
+  ball2.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed() + Math.PI / 4)) + ballRadius;
+  ball3.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed() + Math.PI / 2)) + ballRadius;
 
   controls.update();
   renderer.render(scene, camera);

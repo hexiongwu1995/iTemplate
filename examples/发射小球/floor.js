@@ -5,6 +5,8 @@ const floorLength = 2;
 const floorWidth = 2;
 const floorHeight = 0.01;
 
+// const floorGeometry = new THREE.BoxGeometry(floorLength, floorHeight, floorWidth, 10, 10, 5);
+
 const floor = new THREE.Mesh(
   new THREE.BoxGeometry(floorLength, floorHeight, floorWidth, 10, 10, 5),
   new THREE.MeshStandardMaterial({
