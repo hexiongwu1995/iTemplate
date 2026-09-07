@@ -1,21 +1,23 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-import { desk, deskThickness } from "./desk.js";
+import { floor, floorLength, floorWidth, floorHeight } from "./floor.js";
 import { createBall } from "./ball.js";
 const dpr = window.devicePixelRatio;
 const canvas = document.getElementById("canvas-main");
 const width = canvas.clientWidth;
 const height = canvas.clientHeight;
 const ballRadius = 0.08;
-const ballHeight = ballRadius + deskThickness / 2;
+const ballHeight = ballRadius;
 
 const camera = new THREE.PerspectiveCamera(60, (1 * width) / (1 * height), 0.01, 100);
 camera.position.set(0, 1, 1);
 camera.lookAt(0, 0, 0);
 
 const scene = new THREE.Scene();
-scene.add(desk);
+// scene.add(desk);
+scene.add(floor);
+floor.position.set(0, -floorHeight / 2, 0);
 
 const ball1 = createBall(ballRadius);
 ball1.position.set(-0.3, ballHeight, 0);
@@ -27,13 +29,17 @@ const ball3 = createBall(ballRadius);
 ball3.position.set(0.3, ballHeight, 0);
 scene.add(ball3);
 
-desk.castShadow = true;
-desk.receiveShadow = true;
+// desk.castShadow = true;
+// desk.receiveShadow = true;
 
 const cameraHelper = new THREE.CameraHelper(camera);
 // scene.add(cameraHelper);
 
-const gridHelper = new THREE.GridHelper(2, 20);
+const gridHelper = new THREE.GridHelper(2, 20, 0xffffff, 0xeeeeee);
+gridHelper.material.opacity = 0.2;
+gridHelper.material.depthWrite = false;
+// gridHelper.material.transparent = true;
+
 scene.add(gridHelper);
 
 const axesHelper = new THREE.AxesHelper(1.2);
@@ -66,7 +72,7 @@ balls.forEach((ball) => {
 });
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setClearColor(0xfafafa, 1);
+renderer.setClearColor(0xeeeeee, 1);
 renderer.setPixelRatio(dpr);
 renderer.setSize(width, height, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;

@@ -6,7 +6,7 @@ function createBall(radius = 0.03) {
 const ballRadius = radius;
 
 const loader = new THREE.TextureLoader();
-const ballTexture = loader.load("../../Textures/earth_converted.jpg");
+const ballTexture = loader.load("../../Textures/earth_day_4096.jpg");
 
 const ball = new THREE.Mesh(
   new THREE.SphereGeometry(ballRadius, 32, 32),
