@@ -109,8 +109,8 @@ renderer.render(scene, camera);
 // renderer.setAnimationLoop(animate);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-// controls.autoRotate = true;
-// controls.autoRotateSpeed = 1;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
 controls.enableDamping = true;
 
 const rayCaster = new THREE.Raycaster();
