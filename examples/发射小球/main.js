@@ -85,7 +85,7 @@ function shootBall(position, direction, ballMaterial) {
   visualBall.updateMatrixWorld();
   balls.push({ visualBall, physicsBall });
   scene.add(visualBall);
-  physicsBall.applyLocalForce(new CANNON.Vec3(direction.x, direction.y, direction.z).scale(50), new CANNON.Vec3(0, -0.9 * ballRadius, 0));
+  physicsBall.applyLocalForce(new CANNON.Vec3(direction.x, direction.y, direction.z).scale(500), new CANNON.Vec3(0, -0.9 * ballRadius, 0));
 }
 
 function changeColorWhenClick(mouseCoords, camera, balls) {
