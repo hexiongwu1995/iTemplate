@@ -40,7 +40,7 @@ const floorBody = new CANNON.Body({
 world.addBody(floorBody);
 
 const ball1 = createBall(ballRadius);
-ball1.position.set(0, ballRadius + 0.3, 0);
+ball1.position.set(0, ballRadius + 0.7, 0);
 scene.add(ball1);
 
 // 创建物理小球
@@ -54,7 +54,7 @@ world.addBody(sphereBody)
 
 const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
   friction: 0.5,
-  restitution: 0.99,
+  restitution: 0.999,
 })
 world.addContactMaterial(physics_physics);
 
