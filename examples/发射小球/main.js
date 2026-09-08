@@ -66,6 +66,28 @@ function obtainMouseCoords(event, canvas, mouseCoords) {
   return mouseCoords;
 }
 
+function shootBall(position, direction, ballMaterial) {
+  const visualBall = createBall(ballRadius);
+  visualBall.position.copy(position);
+
+  const physicsBall = new CANNON.Body({
+    mass: 0.1,
+    shape: new CANNON.Sphere(ballRadius),
+    position: new CANNON.Vec3(position.x, position.y, position.z),
+    material: ballMaterial,
+    linearDamping: 0.9,
+  });
+
+  world.addBody(physicsBall);
+
+  visualBall.updateMatrixWorld();
+  balls.push({ visualBall, physicsBall });
+  scene.add(visualBall);
+  physicsBall.applyLocalForce(new CANNON.Vec3(direction.x, direction.y, direction.z).scale(50), new CANNON.Vec3(0, -0.9 * ballRadius, 0));
+}
+
+
+
 function changeColorWhenClick(mouseCoords, camera, balls) {
   const rayCaster = new THREE.Raycaster();
   rayCaster.setFromCamera(mouseCoords, camera);
@@ -81,29 +103,6 @@ function changeColorWhenClick(mouseCoords, camera, balls) {
     intersect.object.material.color.set(0xff0000);
   }
 }
-
-
-  function spawnBall(position, direction, ballMaterial) {
-    const visualBall = createBall(ballRadius);
-    visualBall.position.copy(position);
-
-    const physicsBall = new CANNON.Body({
-      mass: 0.1,
-      shape: new CANNON.Sphere(ballRadius),
-      position: new CANNON.Vec3(position.x, position.y, position.z),
-      material: ballMaterial,
-      linearDamping: 0.9,
-    });
-
-    world.addBody(physicsBall);
-
-    visualBall.updateMatrixWorld();
-    balls.push({ visualBall, physicsBall });
-    scene.add(visualBall);
-    physicsBall.applyLocalForce(new CANNON.Vec3(direction.x, direction.y, direction.z).scale(50), new CANNON.Vec3(0, -0.9 * ballRadius, 0));
-  }
-
-
 
 // 创建物理引擎
 const world = new CANNON.World({
@@ -131,18 +130,17 @@ let balls = [];
 
 const mouseCoords = new THREE.Vector2();
 
+
+
 canvas.addEventListener("dblclick", (event) => {
   obtainMouseCoords(event, canvas, mouseCoords);
-
   const ballOrigin = camera.position;
   const ballDirection = new THREE.Vector3(mouseCoords.x, mouseCoords.y, -1).unproject(camera).sub(camera.position).normalize();
-
-  spawnBall(ballOrigin, ballDirection, physicsMaterial);
+  shootBall(ballOrigin, ballDirection, physicsMaterial);
 });
 
 canvas.addEventListener("click", (event) => {
   obtainMouseCoords(event, canvas, mouseCoords);
-
   changeColorWhenClick(mouseCoords, camera, balls);
 });
 
