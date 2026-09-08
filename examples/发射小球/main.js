@@ -69,7 +69,7 @@ function obtainMouseCoords(event, canvas, mouseCoords) {
 }
 
 function shootBall(position, direction, ballMaterial) {
-  const visualBall = createBall(ballRadius);
+  const visualBall = createBall(ballRadius, ballTexture);
   visualBall.position.copy(position);
 
   const physicsBall = new CANNON.Body({
