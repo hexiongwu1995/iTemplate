@@ -19,6 +19,8 @@ camera.lookAt(0, 0, 0);
 const scene = new THREE.Scene();
 
 scene.add(floor);
+const loader = new THREE.TextureLoader();
+const ballTexture = loader.load("../../Textures/earth_day_4096.jpg");
 
 function createGridHelperAndAxesHelper() {
   const gridHelper = new THREE.GridHelper(2, 22, 0xeeeeee, 0xeeeeee);
