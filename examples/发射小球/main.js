@@ -10,10 +10,10 @@ const dpr = window.devicePixelRatio;
 const canvas = document.getElementById("canvas-main");
 const width = canvas.clientWidth;
 const height = canvas.clientHeight;
-const ballRadius = 0.08;
+const ballRadius = 0.05;
 
 const camera = new THREE.PerspectiveCamera(70, (1 * width) / (1 * height), 0.01, 100);
-camera.position.set(0, 0.5, 1.5);
+camera.position.set(0, 0.5, 1.4);
 camera.lookAt(0, 0, 0);
 
 const scene = new THREE.Scene();
@@ -29,6 +29,12 @@ const world = new CANNON.World({
 // 创建物理材质
 const physicsMaterial = new CANNON.Material("physics");
 
+const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
+  friction: 0.7,
+  restitution: 0.9,
+})
+world.addContactMaterial(physics_physics);
+
 // 创建物理地面
 const floorBody = new CANNON.Body({
   // mass: 0,
@@ -40,35 +46,32 @@ const floorBody = new CANNON.Body({
 world.addBody(floorBody);
 
 const ball1 = createBall(ballRadius);
-ball1.position.set(0, ballRadius + 0.7, 0);
+ball1.position.set(-0.9, ballRadius + 0.5, 0);
 scene.add(ball1);
 
 // 创建物理小球
 const sphereBody = new CANNON.Body({
-  mass: 1, // kg
+  mass: 0.1, // kg
   shape: new CANNON.Sphere(ballRadius),
   position: ball1.position,
   material: physicsMaterial,
 })
 world.addBody(sphereBody)
+// sphereBody.applyLocalForce(new CANNON.Vec3(100, 0, 0), new CANNON.Vec3(0, 0, 0));
+// sphereBody.applyLocalForce(new CANNON.Vec3(20, 0, 0), new CANNON.Vec3(0, - 0.9 * ballRadius, 0));
 
-const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
-  friction: 0.5,
-  restitution: 0.999,
-})
-world.addContactMaterial(physics_physics);
-
-const cameraHelper = new THREE.CameraHelper(camera);
+// 渲染器
+// const cameraHelper = new THREE.CameraHelper(camera);
 // scene.add(cameraHelper);
 
-const gridHelper = new THREE.GridHelper(2.2, 22, 0xffffff, 0xeeeeee);
+const gridHelper = new THREE.GridHelper(2, 22, 0xeeeeee, 0xeeeeee);
 gridHelper.material.opacity = 0.2;
 gridHelper.material.depthWrite = false;
 // gridHelper.material.transparent = true;
 
 scene.add(gridHelper);
 
-const axesHelper = new THREE.AxesHelper(1.2);
+const axesHelper = new THREE.AxesHelper(0.5);
 scene.add(axesHelper);
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
