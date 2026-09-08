@@ -58,7 +58,7 @@ const sphereBody = new CANNON.Body({
 })
 world.addBody(sphereBody)
 // sphereBody.applyLocalForce(new CANNON.Vec3(100, 0, 0), new CANNON.Vec3(0, 0, 0));
-// sphereBody.applyLocalForce(new CANNON.Vec3(20, 0, 0), new CANNON.Vec3(0, - 0.9 * ballRadius, 0));
+sphereBody.applyLocalForce(new CANNON.Vec3(20, 0, 0), new CANNON.Vec3(0, - 0.9 * ballRadius, 0));
 
 // 渲染器
 // const cameraHelper = new THREE.CameraHelper(camera);
