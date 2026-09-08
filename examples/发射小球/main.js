@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import * as CANNON from "cannon-es";
-import { threeToCannon, ShapeType } from 'three-to-cannon';
-import { floor, floorLength, floorWidth, floorHeight } from "./floor.js";
+import { threeToCannon, ShapeType } from "three-to-cannon";
+import { floor, floorLength, floorHeight, floorWidth } from "./floor.js";
 import { createBall } from "./ball.js";
 
 const dpr = window.devicePixelRatio;
@@ -19,23 +19,105 @@ camera.lookAt(0, 0, 0);
 const scene = new THREE.Scene();
 
 scene.add(floor);
-floor.position.set(0, -floorHeight / 2, 0);
+
+function createGridHelperAndAxesHelper() {
+  const gridHelper = new THREE.GridHelper(2, 22, 0xeeeeee, 0xeeeeee);
+  gridHelper.material.opacity = 0.2;
+  gridHelper.material.depthWrite = false;
+  // gridHelper.material.transparent = true;
+  scene.add(gridHelper);
+
+  const axesHelper = new THREE.AxesHelper(0.5);
+  scene.add(axesHelper);
+}
+createGridHelperAndAxesHelper();
+
+function createLight() {
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+  directionalLight.position.set(0.5, 0.5, 0.5);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.set(2048, 2048);
+  scene.add(directionalLight);
+
+  const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.05, 0xff00ff);
+  scene.add(directionalLightHelper);
+
+  // const pointLight = new THREE.PointLight(0xffffff, 1.9, 10)
+  // pointLight.position.set(0, 2, 0);
+  // pointLight.castShadow = true;
+  // pointLight.shadow.mapSize.set(4096, 4096);
+  // scene.add(pointLight);
+
+  // const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1, 0xff00ff);
+  // scene.add(pointLightHelper);
+}
+createLight();
+
+function obtainMouseCoords(event, canvas, mouseCoords) {
+  const rect = canvas.getBoundingClientRect();
+  const localX = event.clientX - rect.left;
+  const localY = event.clientY - rect.top;
+  mouseCoords.x = (2 * (localX - canvas.clientWidth / 2)) / canvas.clientWidth;
+  mouseCoords.y = (2 * (-localY + canvas.clientHeight / 2)) / canvas.clientHeight;
+  console.log("screen:", event.clientX, event.clientY, "canvas:", mouseCoords.x, mouseCoords.y);
+  return mouseCoords;
+}
+
+function changeColorWhenClick(mouseCoords, camera, balls) {
+  const rayCaster = new THREE.Raycaster();
+  rayCaster.setFromCamera(mouseCoords, camera);
+
+  const visualBalls = balls.map((b) => b.visualBall);
+
+  for (const ball of visualBalls) {
+    ball.material.color.set(0xffffff);
+  }
+
+  const intersects = rayCaster.intersectObjects(visualBalls);
+  for (const intersect of intersects) {
+    intersect.object.material.color.set(0xff0000);
+  }
+}
+
+
+  function spawnBall(position, direction, ballMaterial) {
+    const visualBall = createBall(ballRadius);
+    visualBall.position.copy(position);
+
+    const physicsBall = new CANNON.Body({
+      mass: 0.1,
+      shape: new CANNON.Sphere(ballRadius),
+      position: new CANNON.Vec3(position.x, position.y, position.z),
+      material: ballMaterial,
+      linearDamping: 0.9,
+    });
+
+    world.addBody(physicsBall);
+
+    visualBall.updateMatrixWorld();
+    balls.push({ visualBall, physicsBall });
+    scene.add(visualBall);
+    physicsBall.applyLocalForce(new CANNON.Vec3(direction.x, direction.y, direction.z).scale(50), new CANNON.Vec3(0, -0.9 * ballRadius, 0));
+  }
+
+
 
 // 创建物理引擎
 const world = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+  gravity: new CANNON.Vec3(0, -9.82, 0),
 });
 
-// 创建物理材质
 const physicsMaterial = new CANNON.Material("physics");
 
 const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
   friction: 0.7,
   restitution: 0.9,
-})
+});
 world.addContactMaterial(physics_physics);
 
-// 创建物理地面
 const floorBody = new CANNON.Body({
   // mass: 0,
   type: CANNON.Body.STATIC,
@@ -45,119 +127,56 @@ const floorBody = new CANNON.Body({
 });
 world.addBody(floorBody);
 
-const ball1 = createBall(ballRadius);
-ball1.position.set(-0.9, ballRadius + 0.5, 0);
-scene.add(ball1);
-
-// 创建物理小球
-const sphereBody = new CANNON.Body({
-  mass: 0.1, // kg
-  shape: new CANNON.Sphere(ballRadius),
-  position: ball1.position,
-  material: physicsMaterial,
-})
-world.addBody(sphereBody)
-// sphereBody.applyLocalForce(new CANNON.Vec3(100, 0, 0), new CANNON.Vec3(0, 0, 0));
-sphereBody.applyLocalForce(new CANNON.Vec3(20, 0, 0), new CANNON.Vec3(0, - 0.9 * ballRadius, 0));
-
-// 渲染器
-// const cameraHelper = new THREE.CameraHelper(camera);
-// scene.add(cameraHelper);
-
-const gridHelper = new THREE.GridHelper(2, 22, 0xeeeeee, 0xeeeeee);
-gridHelper.material.opacity = 0.2;
-gridHelper.material.depthWrite = false;
-// gridHelper.material.transparent = true;
-
-scene.add(gridHelper);
-
-const axesHelper = new THREE.AxesHelper(0.5);
-scene.add(axesHelper);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
-directionalLight.position.set(0.5, 0.5, 0.5);
-directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.set(2048, 2048);
-scene.add(directionalLight);
-
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.05, 0xff00ff);
-scene.add(directionalLightHelper);
-
-// const pointLight = new THREE.PointLight(0xffffff, 1.9, 10)
-// pointLight.position.set(0, 2, 0);
-// pointLight.castShadow = true;
-// pointLight.shadow.mapSize.set(4096, 4096);
-// scene.add(pointLight);
-
-// const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1, 0xff00ff);
-// scene.add(pointLightHelper);
-
-ball1.updateMatrixWorld();
-
-// const balls = [ball1, ball2, ball3];
-// balls.forEach((ball) => {
-//   ball.updateMatrixWorld();
-// });
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setClearColor(0xeeeeee, 1);
-renderer.setPixelRatio(dpr);
-renderer.setSize(width, height, false);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.shadowMap.enabled = true;
-renderer.render(scene, camera);
-// renderer.setAnimationLoop(animate);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.autoRotate = true;
-controls.autoRotateSpeed = 0.5;
-controls.enableDamping = true;
-
-const rayCaster = new THREE.Raycaster();
+let balls = [];
 
 const mouseCoords = new THREE.Vector2();
-canvas.addEventListener("mousedown", (event) => {
-  // 获取 canvas 相对于视口的位置
-  const rect = canvas.getBoundingClientRect();
-  // 计算鼠标相对于 canvas 左上角的坐标
-  const localX = event.clientX - rect.left;
-  const localY = event.clientY - rect.top;
-  // 以 canvas 中心为原点，水平向右为 x 正方向，竖直向上为 y 正方向
-  mouseCoords.x = (2 * (localX - canvas.clientWidth / 2)) / canvas.clientWidth;
-  mouseCoords.y = (2 * (-localY + canvas.clientHeight / 2)) / canvas.clientHeight;
-  rayCaster.setFromCamera(mouseCoords, camera);
 
-  ball1.material.color.set(0xffffff);
+canvas.addEventListener("dblclick", (event) => {
+  obtainMouseCoords(event, canvas, mouseCoords);
 
-  // for (const ball of balls) {
-  //   ball.material.color.set(0xffffff);
-  // }
+  const ballOrigin = camera.position;
+  const ballDirection = new THREE.Vector3(mouseCoords.x, mouseCoords.y, -1).unproject(camera).sub(camera.position).normalize();
 
-  const intersects = rayCaster.intersectObjects(balls);
-  // console.log(intersects);
-  for (const intersect of intersects) {
-    intersect.object.material.color.set(0xff0000);
-  }
-
-  console.log("screen:", event.clientX, event.clientY, "canvas:", mouseCoords.x, mouseCoords.y);
+  spawnBall(ballOrigin, ballDirection, physicsMaterial);
 });
+
+canvas.addEventListener("click", (event) => {
+  obtainMouseCoords(event, canvas, mouseCoords);
+
+  changeColorWhenClick(mouseCoords, camera, balls);
+});
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+function setRender() {
+  renderer.setClearColor(0xeeeeee, 1);
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(width, height, false);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.render(scene, camera);
+  // renderer.setAnimationLoop(animate);
+}
+setRender();
+
+const controls = new OrbitControls(camera, renderer.domElement);
+function setOrbitControls() {
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
+  controls.enableDamping = true;
+}
+setOrbitControls();
 
 const timer = new THREE.Timer();
 timer.connect(document);
 
 function animate() {
-  
   timer.update();
   world.fixedStep();
-  
-  ball1.position.copy(sphereBody.position);
-  ball1.quaternion.copy(sphereBody.quaternion);
 
-  // ball1.rotation.y += 0.01;
-  // ball1.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed())) + ballRadius;
+  for (const { visualBall, physicsBall } of balls) {
+    visualBall.position.copy(physicsBall.position);
+    visualBall.quaternion.copy(physicsBall.quaternion);
+  }
 
   controls.update();
   renderer.render(scene, camera);
@@ -167,39 +186,46 @@ function animate() {
 
 animate();
 
-// 设置窗口自适应
-window.addEventListener("resize", () => {
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setSize(width, height, false);
-});
-const wrapper = document.querySelector(".canvas-wrapper");
-wrapper.style.backgroundColor = "#eeeeee";
+function resizeAndReset() {
+  window.addEventListener("resize", () => {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+  });
+}
+resizeAndReset();
 
-let eventObj = {
-  FullScreen: function () {
-    wrapper.requestFullscreen();
-    console.log("FullScreen");
-  },
-  ExitFullScreen: function () {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-      console.log("ExitFullScreen");
-    } else {
-      console.log("Not in fullscreen mode");
-    }
-  },
-};
+function createGUIinWrapper() {
+  const wrapper = document.querySelector(".canvas-wrapper");
+  wrapper.style.backgroundColor = "#eeeeee";
 
-const gui = new GUI({ container: wrapper });
+  let eventObj = {
+    FullScreen: function () {
+      wrapper.requestFullscreen();
+      console.log("FullScreen mode enabled");
+    },
+    ExitFullScreen: function () {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+        console.log("FullScreen mode disabled");
+      } else {
+        console.log("Not in fullscreen mode");
+      }
+    },
+  };
 
-gui.title("Controls");
-gui.close();
-gui.add(eventObj, "FullScreen");
-gui.add(eventObj, "ExitFullScreen");
-let folder = gui.addFolder("OrbitControls");
-// folder.close();
-folder.add(controls, "autoRotate").name("Auto Rotate");
-folder.add(controls, "autoRotateSpeed", 0.1, 5).name("Auto Rotate Speed");
+  const gui = new GUI({ container: wrapper });
+
+  gui.title("Controls");
+  gui.close();
+  gui.add(eventObj, "FullScreen");
+  gui.add(eventObj, "ExitFullScreen");
+  let folder = gui.addFolder("OrbitControls");
+  // folder.close();
+  folder.add(controls, "autoRotate").name("Auto Rotate");
+  folder.add(controls, "autoRotateSpeed", 0.1, 5).name("Auto Rotate Speed");
+}
+
+createGUIinWrapper();
