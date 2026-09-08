@@ -88,8 +88,6 @@ function shootBall(position, direction, ballMaterial) {
   physicsBall.applyLocalForce(new CANNON.Vec3(direction.x, direction.y, direction.z).scale(50), new CANNON.Vec3(0, -0.9 * ballRadius, 0));
 }
 
-
-
 function changeColorWhenClick(mouseCoords, camera, balls) {
   const rayCaster = new THREE.Raycaster();
   rayCaster.setFromCamera(mouseCoords, camera);
@@ -132,8 +130,6 @@ let balls = [];
 
 const mouseCoords = new THREE.Vector2();
 
-
-
 canvas.addEventListener("dblclick", (event) => {
   obtainMouseCoords(event, canvas, mouseCoords);
   const ballOrigin = camera.position;
@@ -166,13 +162,30 @@ function setOrbitControls() {
 }
 setOrbitControls();
 
+function resetRenderer(canvas, camera, renderer) {
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height, false);
+}
+
+window.addEventListener("resize", () => {
+  resetRenderer(canvas, camera, renderer);
+});
+
+document.addEventListener("fullscreenchange", () => {
+  // 延迟一帧，确保全屏布局完成
+  requestAnimationFrame(() => {
+    resetRenderer(canvas, camera, renderer);
+  });
+});
+
 const timer = new THREE.Timer();
 timer.connect(document);
 
 function animate() {
   timer.update();
-  world.fixedStep();
-
   for (const { visualBall, physicsBall } of balls) {
     visualBall.position.copy(physicsBall.position);
     visualBall.quaternion.copy(physicsBall.quaternion);
@@ -181,21 +194,11 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
+  world.fixedStep();
   // Run the simulation independently of framerate every 1 / 60 s
 }
 
 animate();
-
-function resizeAndReset() {
-  window.addEventListener("resize", () => {
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height, false);
-  });
-}
-resizeAndReset();
 
 function createGUIinWrapper() {
   const wrapper = document.querySelector(".canvas-wrapper");
