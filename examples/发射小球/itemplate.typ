@@ -22,7 +22,9 @@
         {
           "imports": {
             "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/",
+            "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js",
+            "three-to-cannon": "https://cdn.jsdelivr.net/npm/three-to-cannon@5.0.2/dist/three-to-cannon.esm.js"
           }
         }
         ```.text,
@@ -47,6 +49,7 @@
 
       // html.script(src: "https://unpkg.com/@hexiongwu1995/itemplate/scripts/script.js", defer: true)
       html.script(src: "../../dist/scripts/script.js", defer: true)
+      // html.script(src: "https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.js", defer: true)
     })
     html.body({
       html.div(class: ("container",), {

@@ -1,16 +1,19 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+import * as CANNON from "cannon-es";
+import { threeToCannon, ShapeType } from 'three-to-cannon';
 import { floor, floorLength, floorWidth, floorHeight } from "./floor.js";
 import { createBall } from "./ball.js";
+
 const dpr = window.devicePixelRatio;
 const canvas = document.getElementById("canvas-main");
 const width = canvas.clientWidth;
 const height = canvas.clientHeight;
 const ballRadius = 0.08;
 
-const camera = new THREE.PerspectiveCamera(60, (1 * width) / (1 * height), 0.01, 100);
-camera.position.set(0, 1, 1);
+const camera = new THREE.PerspectiveCamera(70, (1 * width) / (1 * height), 0.01, 100);
+camera.position.set(0, 0.5, 1.5);
 camera.lookAt(0, 0, 0);
 
 const scene = new THREE.Scene();
@@ -18,21 +21,47 @@ const scene = new THREE.Scene();
 scene.add(floor);
 floor.position.set(0, -floorHeight / 2, 0);
 
-const ball1 = createBall(ballRadius);
-ball1.position.set(-0.3, ballRadius, 0);
-scene.add(ball1);
-const ball2 = createBall(ballRadius);
-ball2.position.set(0, ballRadius, 0);
-scene.add(ball2);
-const ball3 = createBall(ballRadius);
-ball3.position.set(0.3, ballRadius, 0);
-scene.add(ball3);
+// 创建物理引擎
+const world = new CANNON.World({
+  gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+});
 
+// 创建物理材质
+const physicsMaterial = new CANNON.Material("physics");
+
+// 创建物理地面
+const floorBody = new CANNON.Body({
+  // mass: 0,
+  type: CANNON.Body.STATIC,
+  shape: new CANNON.Box(new CANNON.Vec3(floorLength / 2, floorHeight / 2, floorWidth / 2)),
+  position: new CANNON.Vec3(0, -floorHeight / 2, 0),
+  material: physicsMaterial,
+});
+world.addBody(floorBody);
+
+const ball1 = createBall(ballRadius);
+ball1.position.set(0, ballRadius + 0.3, 0);
+scene.add(ball1);
+
+// 创建物理小球
+const sphereBody = new CANNON.Body({
+  mass: 1, // kg
+  shape: new CANNON.Sphere(ballRadius),
+  position: ball1.position,
+  material: physicsMaterial,
+})
+world.addBody(sphereBody)
+
+const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
+  friction: 0.5,
+  restitution: 0.99,
+})
+world.addContactMaterial(physics_physics);
 
 const cameraHelper = new THREE.CameraHelper(camera);
 // scene.add(cameraHelper);
 
-const gridHelper = new THREE.GridHelper(2, 20, 0xffffff, 0xeeeeee);
+const gridHelper = new THREE.GridHelper(2.2, 22, 0xffffff, 0xeeeeee);
 gridHelper.material.opacity = 0.2;
 gridHelper.material.depthWrite = false;
 // gridHelper.material.transparent = true;
@@ -63,10 +92,12 @@ scene.add(directionalLightHelper);
 // const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1, 0xff00ff);
 // scene.add(pointLightHelper);
 
-const balls = [ball1, ball2, ball3];
-balls.forEach((ball) => {
-  ball.updateMatrixWorld();
-});
+ball1.updateMatrixWorld();
+
+// const balls = [ball1, ball2, ball3];
+// balls.forEach((ball) => {
+//   ball.updateMatrixWorld();
+// });
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setClearColor(0xeeeeee, 1);
@@ -96,9 +127,11 @@ canvas.addEventListener("mousedown", (event) => {
   mouseCoords.y = (2 * (-localY + canvas.clientHeight / 2)) / canvas.clientHeight;
   rayCaster.setFromCamera(mouseCoords, camera);
 
-  for (const ball of balls) {
-    ball.material.color.set(0xffffff);
-  }
+  ball1.material.color.set(0xffffff);
+
+  // for (const ball of balls) {
+  //   ball.material.color.set(0xffffff);
+  // }
 
   const intersects = rayCaster.intersectObjects(balls);
   // console.log(intersects);
@@ -113,19 +146,20 @@ const timer = new THREE.Timer();
 timer.connect(document);
 
 function animate() {
-  ball1.rotation.y += 0.01;
-  ball2.rotation.y += 0.02;
-  ball3.rotation.y += 0.03;
-
+  
   timer.update();
+  world.fixedStep();
+  
+  ball1.position.copy(sphereBody.position);
+  ball1.quaternion.copy(sphereBody.quaternion);
 
-  ball1.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed())) + ballRadius;
-  ball2.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed() + Math.PI / 4)) + ballRadius;
-  ball3.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed() + Math.PI / 2)) + ballRadius;
+  // ball1.rotation.y += 0.01;
+  // ball1.position.y = 0.5 * Math.abs(Math.sin(timer.getElapsed())) + ballRadius;
 
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
+  // Run the simulation independently of framerate every 1 / 60 s
 }
 
 animate();
