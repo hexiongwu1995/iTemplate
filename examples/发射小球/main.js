@@ -5,6 +5,7 @@ import * as CANNON from "cannon-es";
 import { threeToCannon, ShapeType } from "three-to-cannon";
 import { floor, floorLength, floorHeight, floorWidth } from "./floor.js";
 import { createBall } from "./ball.js";
+import { createGridHelperAndAxesHelper, createLight, setOrbitControls, obtainMouseCoords, setGUIinWrapper, setRender, resetRenderer } from "./setting.js";
 
 const dpr = window.devicePixelRatio;
 const canvas = document.getElementById("canvas-main");
@@ -22,51 +23,9 @@ scene.add(floor);
 const loader = new THREE.TextureLoader();
 const ballTexture = loader.load("../../Textures/earth_day_4096.jpg");
 
-function createGridHelperAndAxesHelper() {
-  const gridHelper = new THREE.GridHelper(2, 22, 0xeeeeee, 0xeeeeee);
-  gridHelper.material.opacity = 0.2;
-  gridHelper.material.depthWrite = false;
-  // gridHelper.material.transparent = true;
-  scene.add(gridHelper);
+createGridHelperAndAxesHelper(scene);
 
-  const axesHelper = new THREE.AxesHelper(0.5);
-  scene.add(axesHelper);
-}
-createGridHelperAndAxesHelper();
-
-function createLight() {
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambientLight);
-
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
-  directionalLight.position.set(0.5, 0.5, 0.5);
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.set(2048, 2048);
-  scene.add(directionalLight);
-
-  const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.05, 0xff00ff);
-  scene.add(directionalLightHelper);
-
-  // const pointLight = new THREE.PointLight(0xffffff, 1.9, 10)
-  // pointLight.position.set(0, 2, 0);
-  // pointLight.castShadow = true;
-  // pointLight.shadow.mapSize.set(4096, 4096);
-  // scene.add(pointLight);
-
-  // const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1, 0xff00ff);
-  // scene.add(pointLightHelper);
-}
-createLight();
-
-function obtainMouseCoords(event, canvas, mouseCoords) {
-  const rect = canvas.getBoundingClientRect();
-  const localX = event.clientX - rect.left;
-  const localY = event.clientY - rect.top;
-  mouseCoords.x = (2 * (localX - canvas.clientWidth / 2)) / canvas.clientWidth;
-  mouseCoords.y = (2 * (-localY + canvas.clientHeight / 2)) / canvas.clientHeight;
-  console.log("screen:", event.clientX, event.clientY, "canvas:", mouseCoords.x, mouseCoords.y);
-  return mouseCoords;
-}
+createLight(scene);
 
 function shootBall(position, direction, ballMaterial) {
   const visualBall = createBall(ballRadius, ballTexture);
@@ -143,32 +102,13 @@ canvas.addEventListener("click", (event) => {
 });
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-function setRender() {
-  renderer.setClearColor(0xeeeeee, 1);
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(width, height, false);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.shadowMap.enabled = true;
-  renderer.render(scene, camera);
-  // renderer.setAnimationLoop(animate);
-}
-setRender();
+
+setRender(renderer, dpr, width, height);
+renderer.render(scene, camera);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-function setOrbitControls() {
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.5;
-  controls.enableDamping = true;
-}
-setOrbitControls();
 
-function resetRenderer(canvas, camera, renderer) {
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setSize(width, height, false);
-}
+setOrbitControls(controls);
 
 window.addEventListener("resize", () => {
   resetRenderer(canvas, camera, renderer);
@@ -181,6 +121,23 @@ document.addEventListener("fullscreenchange", () => {
   });
 });
 
+let materials = [
+  new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+  new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+  new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+];
+
+// const cube = new THREE.Mesh(
+//   new THREE.BoxGeometry(0.5, 0.5, 0.5),
+//   materials,
+// )
+
+// scene.add(cube)
+// cube.rotation.y = Math.PI / 2;
+
 const timer = new THREE.Timer();
 timer.connect(document);
 
@@ -191,6 +148,8 @@ function animate() {
     visualBall.quaternion.copy(physicsBall.quaternion);
   }
 
+  // cube.rotation.x = timer.getElapsed() * 0.1;
+  // cube.rotation.z = timer.getElapsed() * 0.1;
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
@@ -200,35 +159,6 @@ function animate() {
 
 animate();
 
-function createGUIinWrapper() {
-  const wrapper = document.querySelector(".canvas-wrapper");
-  wrapper.style.backgroundColor = "#eeeeee";
-
-  let eventObj = {
-    FullScreen: function () {
-      wrapper.requestFullscreen();
-      console.log("FullScreen mode enabled");
-    },
-    ExitFullScreen: function () {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-        console.log("FullScreen mode disabled");
-      } else {
-        console.log("Not in fullscreen mode");
-      }
-    },
-  };
-
-  const gui = new GUI({ container: wrapper });
-
-  gui.title("Controls");
-  gui.close();
-  gui.add(eventObj, "FullScreen");
-  gui.add(eventObj, "ExitFullScreen");
-  let folder = gui.addFolder("OrbitControls");
-  // folder.close();
-  folder.add(controls, "autoRotate").name("Auto Rotate");
-  folder.add(controls, "autoRotateSpeed", 0.1, 5).name("Auto Rotate Speed");
-}
-
-createGUIinWrapper();
+const wrapper = document.querySelector(".canvas-wrapper");
+const gui = new GUI({ container: wrapper });
+setGUIinWrapper(gui, wrapper, controls);
