@@ -40,6 +40,8 @@ function setOrbitControls(orbitControls) {
   orbitControls.autoRotate = false;
   orbitControls.autoRotateSpeed = 0.5;
   orbitControls.enableDamping = true;
+  // orbitControls.enableZoom = false;
+  // orbitControls.enablePan = false;
 }
 
 
