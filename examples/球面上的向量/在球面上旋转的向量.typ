@@ -1,6 +1,6 @@
 #import "itemplate.typ": *
 // #import "@preview/itemplate: 0.1.0": *
-#show: contents => itemplate(title: "发射小球", contents)
+#show: contents => itemplate(title: "在球面上旋转的向量", contents)
 
 = #lorem(3)
 
@@ -17,7 +17,7 @@
     class: "canvas-wrapper",
     html.canvas(
       style: "width: 100%;aspect-ratio: 1.25; margin: 0 auto; position: relative;",
-      id: "canvas-main",
+      id: "canvas-vector-on-a-sphere",
     ),
   ),
 )
@@ -37,13 +37,4 @@
 
 #lorem(20)
 
-
-
-// #block(
-// html.iframe(
-//       style: "width: 100%; height: 400px; margin: 0 auto;",
-//       src: "//player.bilibili.com/player.html?isOutside=true&aid=115948078040084&bvid=BV1udzrBeEfx&cid=35578053293&p=1",
-//       allowfullscreen: true,
-//     )
-// )
 

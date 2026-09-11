@@ -1,4 +1,3 @@
-
 import * as THREE from "three";
 
 function createGridHelperAndAxesHelper(scene) {
@@ -22,19 +21,20 @@ function createLight(scene) {
   directionalLight.shadow.mapSize.set(2048, 2048);
   scene.add(directionalLight);
 
-  const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.05, 0xff00ff);
-  scene.add(directionalLightHelper);
-
-  // const pointLight = new THREE.PointLight(0xffffff, 1.9, 10)
-  // pointLight.position.set(0, 2, 0);
-  // pointLight.castShadow = true;
-  // pointLight.shadow.mapSize.set(4096, 4096);
-  // scene.add(pointLight);
-
-  // const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1, 0xff00ff);
-  // scene.add(pointLightHelper);
+  // const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.05, 0xff00ff);
+  // scene.add(directionalLightHelper);
 }
 
+function createPointLight(scene) {
+  const pointLight = new THREE.PointLight(0xffffff, 3.0, 5);
+  pointLight.position.set(1,1,1);
+  pointLight.castShadow = true;
+  pointLight.shadow.mapSize.set(4096, 4096);
+  scene.add(pointLight);
+
+  const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1, 0xff00ff);
+  scene.add(pointLightHelper);
+}
 
 function setOrbitControls(orbitControls) {
   orbitControls.autoRotate = false;
@@ -43,7 +43,6 @@ function setOrbitControls(orbitControls) {
   // orbitControls.enableZoom = false;
   // orbitControls.enablePan = false;
 }
-
 
 function obtainMouseCoords(event, canvas, mouseCoords) {
   const rect = canvas.getBoundingClientRect();
@@ -100,4 +99,4 @@ function resetRenderer(canvas, camera, renderer) {
   renderer.setSize(width, height, false);
 }
 
-export { createGridHelperAndAxesHelper, createLight, setOrbitControls,  obtainMouseCoords, setGUIinWrapper, setRender, resetRenderer };
+export { createGridHelperAndAxesHelper, createLight, createPointLight, setOrbitControls, obtainMouseCoords, setGUIinWrapper, setRender, resetRenderer };
