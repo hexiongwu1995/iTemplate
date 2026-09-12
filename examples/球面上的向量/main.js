@@ -28,7 +28,7 @@ const sphere = new THREE.Mesh(
   new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.8,
     depthWrite: false,
   }),
 );
@@ -39,7 +39,7 @@ scene.add(sphere);
 const orbit1 = new THREE.Mesh(
   new THREE.RingGeometry(sphereRadius - 0.01, sphereRadius, 32, 2, 0, 2 * Math.PI),
   new THREE.MeshStandardMaterial({
-    color: 0xffff00,
+    color: 0xdddddd,
     side: THREE.DoubleSide,
     transparent: true,
     opacity: 0.8,
@@ -53,7 +53,7 @@ const radiusOrbit2 = sphereRadius * Math.sin(Math.PI / 4);
 const orbit2 = new THREE.Mesh(
   new THREE.RingGeometry(radiusOrbit2 - 0.01, radiusOrbit2, 32, 2, 0, 2 * Math.PI),
   new THREE.MeshStandardMaterial({
-    color: 0xffff00,
+    color: 0xdddddd,
     side: THREE.DoubleSide,
     transparent: true,
     opacity: 0.8,
@@ -64,7 +64,7 @@ orbit2.rotation.x = Math.PI / 2;
 sphere.add(orbit2);
 
 
-const vec1 = createLine(new THREE.Vector3(0, 0, 0), sphCoords(sphereRadius, Math.PI / 4, Math.PI / 8), {
+const vec1 = createLine(new THREE.Vector3(0, 0, 0), sphCoords(sphereRadius * 2, Math.PI / 4, Math.PI / 8), {
   color: 0x00ff00,
 });
 scene.add(vec1);
