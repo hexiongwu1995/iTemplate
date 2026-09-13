@@ -5,8 +5,6 @@
 #import "@preview/theoframe:0.3.7": *
 #show: theoframe-setup.with(theme: (style: "box", color: rgb("#067300")))
 
-#import "@preview/zero:0.7.0": num as number, set-num as set-number, zi
-#set-number(digits: 2, exponent: "sci")
 #import "@preview/unify:0.8.1": *
 
 #import "@preview/invaria:0.2.0"
@@ -14,36 +12,24 @@
 #import invaria.codata2022.atomic-and-nuclear: *
 #import invaria.codata2022.electromagnetic: *
 
-// #set page(paper: "a4", margin: 2cm)
-// #set heading(numbering: "1.")
-#set text(lang: "zh")
 #import "@preview/cetz:0.5.2"
-
-
 
 #show figure: set block(breakable: true)
 #show math.equation: set block(breakable: true)
 
-// #import "@preview/cetz:0.5.2": canvas as _cetz-canvas
-// #let cetz-canvas(..args) = {
-//   if sys.inputs.at("format", default: "pdf") == "html" {
-//     html.elem("div", html.frame(_cetz-canvas(..args)), attrs: (class: "typst-diagram"))
-//   } else {
-//     _cetz-canvas(..args)
-//   }
-// }
-
-
-
-
 #show figure.where(kind: "cetz"): it => {
   if (target() == "bundle" or target() == "html") {
-    html.elem("div", attrs: (style: "width: 100%; margin: 10pt auto; display: flex; justify-content: center", class: "typst-diagram"), html.frame(it))
+    html.elem(
+      "div",
+      attrs: (style: "width: 100%; margin: 10pt auto; display: flex; justify-content: center", class: "typst-diagram"),
+      html.frame(it),
+    )
   } else { it }
 }
 
-
-
+// #set page(paper: "a4", margin: 2cm)
+// #set heading(numbering: "1.")
+#set text(lang: "zh")
 
 
 = 静电力计算
@@ -58,22 +44,21 @@
   //  &= (#qty("6.67e-11", newtonian-constant-of-gravitation.unit) times #qty("1.67e-27", proton-mass.unit) times #qty("9.11e-31", electron-mass.unit) )/(5.3 times 10^(-11) "m")^2 \
   $
     F_G & = (G m_p m_e)/r^2 \
-        & = #number(FG) "N" \
+        & = #qty("3.62e-47", "N") \
   $
 
   #let coulomb-constant = 1 / (4 * calc.pi * vacuum-electric-permittivity.val)
   #let FE = coulomb-constant * elementary-charge.val * elementary-charge.val / calc.pow(r, 2)
-
-  //     & =( #number(coulomb-constant) "m""F"^(-1) times #number(elementary-charge.val) "C" times #number(elementary-charge.val) "C" )/ (#number(r)"m")^2 \
+  #let FE-FG = FE / FG
 
   静电力：
   $
     F_E & = ( k_e Q_p Q_e )/ r^2 \
-        & = #number(FE) "N" \
+        & = #qty("8.21e-8", "N") \
   $
 
   静电力与万有引力之比：
-  $ F_E / F_G = #number(FE / FG) $
+  $ F_E / F_G = #qty("2.26e39", "1") $
 ]
 
 
@@ -128,7 +113,7 @@
   #let F = coulomb-constant * Q * Q / calc.pow(r, 2)
   $
     |arrow(F)_(13)| = |arrow(F)_(23)| & = k_e Q^2 / r^2 \
-    & = #number(coulomb-constant) "m""F"^(-1) times (#number(Q) "C")^2 / (#number(r)"m")^2 \
+    &= #qty("8.98e9", "mF^-1") dot (#qty("2e-6", "C"))^2 /( #qty("5e-1", "m") )^2\ 
     &= #calc.round(F, digits: 3) "N"
   $
 
@@ -142,11 +127,6 @@
   如图所示，$arrow(F)_"total"$的方向为向外的角平分线方向。 \
   由对称关系可知 q1 和 q2的静电力合力的大小等于$arrow(F)_"total"$的大小，方向为各自所在点处向外的角平分线方向。
 ]
-
-
-// #html.elem("div", diagram1, attrs: (class: "typst-diagram"))
-// #html.frame(diagram1)
-
 
 
 
@@ -218,8 +198,6 @@
   ]
 
 
-
-
   #set align(left)
   因为：
   q1 = q2 = q3 = q4 = q \
@@ -288,16 +266,15 @@
       content("F1.end", $arrow(F)$, anchor: "east", padding: 5pt)
       content("F2.end", $arrow(F)$, anchor: "west", padding: 5pt)
       set-style(
-        line: (stroke: (paint: luma(50%), dash: "densely-dotted")),
-        mark: (end: (symbol: "stealth", fill: black)),
+        line: (stroke: (paint: luma(50%), dash: "densely-dotted"), mark: (end: (symbol: "stealth", fill: luma(50%)))),
       )
-      line((rel: (-0.5, 0), to: b2), (rel: (1, 0), to: b2), name: "x", mark: (end: (symbol: "stealth", fill: black)))
-      line((rel: (0, -1), to: b2), (rel: (0, 1), to: b2), name: "y", mark: (end: (symbol: "stealth", fill: black)))
+      line((rel: (-0.5, 0), to: b2), (rel: (1, 0), to: b2), name: "x")
+      line((rel: (0, -1), to: b2), (rel: (0, 1), to: b2), name: "y")
       content("x.end", [x], anchor: "west", padding: 5pt)
       content("y.end", [y], anchor: "south", padding: 5pt)
 
       let b2O-middle = ((b2.at(0) + O.at(0)) / 2, (b2.at(1) + O.at(1)) / 2)
-      line(b2, b2O-middle, name: "Fp")
+      line(b2, b2O-middle, name: "Fp", stroke: (dash: "solid"))
       content("Fp.end", $arrow(F)_p$, anchor: "east", padding: 5pt)
       let py = (b2.at(0), b2O-middle.at(1))
       let px = (b2O-middle.at(0), b2.at(1))
@@ -308,7 +285,10 @@
       set-style(line: (stroke: (paint: luma(50%), dash: "densely-dotted"), mark: none))
       line(px, b2O-middle, py)
       let pg = (rel: (0, -0.6), to: b2)
-      line(b2, pg, mark: (end: (symbol: "stealth", fill: luma(50%))), name: "Fg")
+      set-style(
+        line: (stroke: (paint: luma(50%), dash: "solid"), mark: (end: (symbol: "stealth", fill: luma(50%)))),
+      )
+      line(b2, pg, name: "Fg")
       content("Fg.end", $arrow(F)_g$, anchor: "west", padding: 5pt)
       content(b2, [b], frame: "circle", stroke: none, fill: gradient.radial(luma(90%), luma(60%)), padding: 5pt)
     })
@@ -323,8 +303,8 @@
   $
     => |arrow(F)| & = |arrow(F)_g| * "cb" / "Oc" \
                   & = m g * "cb" / "Oc" \
-                  & = 0.6 upright(g) * 10 upright(m s^(-2)) * 5 / 12 \
-                  & = 2.5 times 10^(-3) "N"
+                  &= #qty("0.6", "g") times #qty("10", "m s^-2") times 5 / 12 \ 
+                  &= #qty("2.5e-3", "N") \ 
   $
 
   #let F = 2.5e-3;
@@ -338,8 +318,7 @@
   则，电荷量：
   $
     q & = sqrt((F r^2)/ k) \
-      & = #number(q) "C"
+    &= #qty("5.27e-8", "C") \ 
   $
 ]
-
 
