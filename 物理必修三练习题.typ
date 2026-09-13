@@ -1,6 +1,5 @@
-#import "@preview/itemplate:0.1.0": *
-#show: contents => itemplate(doc-title: "物理必修三练习题", doc-author: "HeXiongwu", contents)
-
+// #import "@preview/itemplate:0.1.0": *
+// #show: contents => itemplate(doc-title: "物理必修三练习题", doc-author: "HeXiongwu", contents)
 
 #import "@preview/theoframe:0.3.7": *
 #show: theoframe-setup.with(theme: (style: "box", color: rgb("#067300")))
@@ -30,6 +29,12 @@
 // #set page(paper: "a4", margin: 2cm)
 // #set heading(numbering: "1.")
 #set text(lang: "zh")
+
+// #let cetz-number(kind, loc) = context {
+//   let h-counter = counter(heading.where(level: 1)).at(loc)
+//   let f-counter = counter(figure.where(kind: kind)).at(loc)
+//   numbering("1", ..f-counter)
+// }
 
 
 = 静电力计算
@@ -61,7 +66,6 @@
   $ F_E / F_G = #qty("2.26e39", "1") $
 ]
 
-
 #example(
   name: [真空中有三个带正电的点电荷，它们固定在边长为 50 cm 的等边三角形的三个顶点上，每个点电荷的电荷量都是 $2.0 times 10^(-6)$ C，求它们各自所受的静电力。],
 )[
@@ -70,8 +74,9 @@
   #figure(
     caption: [位于等边三角形三个顶点处的电荷],
     numbering: "1.",
+    // _ => context counter(figure.where(kind: "cetz")).display("1.")
     kind: "cetz",
-    supplement: none,
+    supplement: [图],
   )[
     #cetz.canvas(length: 1.5cm, {
       import cetz.draw: *
@@ -167,7 +172,7 @@
     caption: [位于正方形四个顶点处的电荷],
     numbering: "1.",
     kind: "cetz",
-    supplement: none,
+    supplement: [图],
   )[
     #cetz.canvas(length: 1cm, {
       import cetz.draw: *
@@ -225,7 +230,7 @@
     caption: [悬挂在绝缘细线上的带电小球],
     numbering: "1.",
     kind: "cetz",
-    supplement: none,
+    supplement: [图],
   )[
     #cetz.canvas(length: 4cm, {
       import cetz.draw: *
