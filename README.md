@@ -42,7 +42,6 @@ The template comes with built-in support for:
   type: "module",
   src: "https://unpkg.com/@hexiongwu1995/itemplate/examples/itemplate/three-orbital-cube.js",
 )
-
 ```
 
 # Compile to Bundle
