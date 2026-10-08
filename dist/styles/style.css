@@ -80,7 +80,6 @@
   max-width: 250px;
 }
 
-
 .lil-gui {
   --background-color: #dddddd;
   --title-background-color: #cccccc;
@@ -96,14 +95,11 @@
   background-color: #cccccc;
 }
 
-
 .lil-gui .controller {
   background-color: #dddddd;
 }
 
-
-
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 700px) {
   .lil-gui.root {
     display: none;
   }
@@ -527,35 +523,6 @@ article :is(h1, h2, h3, h4, h5, h6) {
   scroll-margin-top: calc(var(--header-height) + 2px);
 }
 
-/* mathjax.css */
-
-span.math {
-  font-size: 0.8rem;
-}
-
-span.math-space {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-
-div.math {
-  text-align: center;
-  font-size: 1rem;
-}
-
-@media screen and (max-width: 1000px) {
-  span.math {
-    font-size: 1rem;
-  }
-  div.math {
-    font-size: 1rem;
-  }
-}
-
 /* highlight.css */
 
 div.highlight {
@@ -594,20 +561,53 @@ article a {
   text-decoration: none;
 }
 
-/* MathJax.css */
+/* mathfonts.css */
 
-mjx-container[display="true"] {
-  display: block;
-  width: 100%;
+html {
+  font-family: "latin modern math", "STIX Two Math", "Noto Sans Math", "Cambria Math", "Fira Math", "Times New Roman", "KaiTi", sans-serif;
+}
+
+math {
+  font-family: "latin modern math", "STIX Two Math", "Noto Sans Math", math;
+  font-weight: 400;
+  font-style: normal;
+}
+
+mover[accent="true"] > mo {
+  margin-left: 0.2em;
+}
+
+/* 调整行间距和段间距 */
+
+p {
+  line-height: 1.5;
+  margin-bottom: 0.8em;
+}
+
+article div {
+  line-height: 1.5;
+  margin-bottom: 0.8em;
+}
+
+article li {
+  line-height: 1.5;
+}
+
+math {
+  font-size: clamp(0.6rem, 3.5vw, 1rem);
+  line-height: 1.5;
+  margin-bottom: 0.8em;
+}
+
+math[display="block"] {
+  max-width: 100%;
   overflow-x: auto;
-  overflow-y: auto;
-  scrollbar-width: none;
-  /* Firefox 隐藏滚动条 */
-  -ms-overflow-style: none;
-  /* IE/Edge 旧版本隐藏滚动条 */
+  overflow-y: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 
-mjx-container[display="true"]::-webkit-scrollbar {
-  /*  Chrome、Safari、新版 Edge 隐藏滚动条 */
-  display: none;
+math[display="block"]::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
+
