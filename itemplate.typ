@@ -52,6 +52,7 @@
           ```.text,
         )
         // a test message to prove the workflow works
+        // another test message to prove the workflow works in the process of pull request reviewing
         // html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/startup.js", defer: true)
 
         // html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js", defer: true)
