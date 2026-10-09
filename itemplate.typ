@@ -51,7 +51,7 @@
           };
           ```.text,
         )
-
+        // a test message to prove the workflow works
         // html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/startup.js", defer: true)
 
         // html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js", defer: true)

@@ -1,5 +1,6 @@
 name: Publish to fork
 
+# a test message to prove the workflow works
 # 推送以 v 开头的 tag 时触发
 on:
   push:
@@ -58,11 +59,11 @@ jobs:
           mkdir -p "${DEST}"
           # 只复制指定的文件和文件夹，避免仓库新增文件时被误打包
           cp -rv \
-            typst.toml \
-            README.md \
-            LICENSE \
-            itemplate.typ \
             assets \
+            itemplate.typ \
+            LICENSE \
+            README.md \
+            typst.toml \
             "${DEST}/"
 
       - name: Commit and push to fork
