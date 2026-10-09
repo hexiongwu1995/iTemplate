@@ -1,5 +1,5 @@
 
-# commands
+# git commands
 
 ```bash
 git tag v0.4.0
@@ -8,4 +8,7 @@ git push origin --delete v0.4.0
 
 git tag -f v0.4.0 # 强制把 tag 移到最新提交 
 git push -f origin v0.4.0 # 覆盖远端 tag → 触发 workflow 重跑
+
+git clone --depth 1 https://github.com/hexiongwu1995/itemplate .
+git fetch --deepen 10
 ```

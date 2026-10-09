@@ -110,7 +110,7 @@
                 })
               })
             })
-            html.article(class: ("htmlmathparagraph",), {
+            html.article({
               body
             })
           })
