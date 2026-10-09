@@ -1,0 +1,6 @@
+{
+  "tinymist.typstExtraArgs": ["--features=html", "--features=bundle"],
+  // "tinymist.exportTarget": "bundle"
+  // "tinymist.exportPdf" : "onSave" ,
+  // "tinymist.outputPath": "$root/$dir/$name"
+}

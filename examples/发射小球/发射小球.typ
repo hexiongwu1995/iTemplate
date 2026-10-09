@@ -1,6 +1,6 @@
 #import "itemplate.typ": *
-// #import "@preview/itemplate: 0.1.0": *
-#show: contents => itemplate(title: "发射小球", contents)
+// #import "@preview/itemplate:0.4.0": *
+#show: itemplate.with(doc-title: "发射小球")
 
 = #lorem(3)
 
@@ -24,7 +24,7 @@
 
 #html.script(
   type: "module",
-  src: "./main.js",
+  src: "../main.js",
 )
 
 

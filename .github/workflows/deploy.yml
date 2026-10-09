@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - 'dist/**'
-      - 'examples/**'
-      - 'Textures/**'
-      - '.github/workflows/deploy.yml'
+      - "dist/**"
+      - "examples/**"
+      - "Textures/**"
+      - ".github/workflows/deploy.yml"
 
 jobs:
   deploy:
@@ -18,12 +18,17 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v7
       - uses: actions/configure-pages@v6
-
+      - name: Stage Pages assets
+        run: |
+          mkdir -p _site
+          cp -r dist examples Textures _site/
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: .
-
+          path: _site
       - uses: actions/deploy-pages@v5
+
+# 在 Marketplace 卡片上，官方 action 的图标是 GitHub 的蓝色 Octocat 标志 ，发布者显示为 GitHub。
+# 判断官方与否 只看`owner/repo` 前缀 ，不看标题里有没有 "GitHub Pages"。
+# 想 100% 确认，最直接的办法：打开`https://github.com/actions/deploy-pages` ，看仓库是否在`actions` 组织下即可。

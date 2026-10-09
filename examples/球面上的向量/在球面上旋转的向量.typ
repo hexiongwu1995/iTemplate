@@ -1,6 +1,6 @@
 #import "itemplate.typ": *
-// #import "@preview/itemplate: 0.1.0": *
-#show: contents => itemplate(title: "在球面上旋转的向量", contents)
+// #import "@preview/itemplate: 0.4.0": *
+#show: itemplate.with(doc-title: "在球面上旋转的向量")
 
 = #lorem(3)
 

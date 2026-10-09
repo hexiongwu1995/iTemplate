@@ -2,7 +2,10 @@
 # commands
 
 ```bash
-git tag v0.4.2
-git push origin v0.4.2
-git push origin --delete v0.4.2
+git tag v0.4.0
+git push origin v0.4.0
+git push origin --delete v0.4.0
+
+git tag -f v0.4.0 # 强制把 tag 移到最新提交 
+git push -f origin v0.4.0 # 覆盖远端 tag → 触发 workflow 重跑
 ```

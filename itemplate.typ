@@ -52,7 +52,7 @@
           ```.text,
         )
 
-        html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/startup.js", defer: true)
+        // html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/startup.js", defer: true)
 
         // html.script(src: "https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js", defer: true)
 

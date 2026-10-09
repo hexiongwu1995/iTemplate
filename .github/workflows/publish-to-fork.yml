@@ -1,7 +1,6 @@
 name: Publish to fork
 
-# 推送以 v 开头的 tag 时触发（去掉 v 后需与 typst.toml 中的 version 一致）
-# 例：git tag v0.4.0 && git push origin v0.4.0
+# 推送以 v 开头的 tag 时触发
 on:
   push:
     tags:
@@ -15,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Verify tag matches package version
         run: |
@@ -57,19 +56,14 @@ jobs:
             exit 1
           fi
           mkdir -p "${DEST}"
-          rsync -av \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='dist/' \
-            --exclude='examples/' \
-            --exclude='Textures/' \
-            --exclude='.gitignore' \
-            --exclude='commands.md' \
-            --exclude='publish-package-guidance.md' \
-            --exclude='/packages/' \
-            --exclude='local/' \
-            --exclude='*.pdf' \
-            ./ "${DEST}/"
+          # 只复制指定的文件和文件夹，避免仓库新增文件时被误打包
+          cp -rv \
+            typst.toml \
+            README.md \
+            LICENSE \
+            itemplate.typ \
+            assets \
+            "${DEST}/"
 
       - name: Commit and push to fork
         working-directory: packages
@@ -79,7 +73,7 @@ jobs:
           git checkout -b "itemplate-${VERSION}"
           git add "packages/preview/itemplate/${VERSION}"
           git commit -m "itemplate: ${VERSION}"
-          git push -u origin "itemplate-${VERSION}"
+          git push -u --force origin "itemplate-${VERSION}"
 
       # - name: Create pull request to typst/packages
       #   working-directory: packages
@@ -110,16 +104,21 @@ jobs:
       #     )"
 
   # 在当前仓库创建 GitHub Release（附带自动生成的更新说明）
+  # 重跑时若 release 已存在，则删除后重建，以刷新自动生成的更新说明
   release:
     needs: publish
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Create GitHub release
+      - name: Recreate GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            # 注意：不要加 --cleanup-tag，否则会连 tag 一起删掉
+            gh release delete "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --yes
+          fi
           gh release create "${GITHUB_REF_NAME}" \
             --repo "${GITHUB_REPOSITORY}" \
             --title "itemplate ${GITHUB_REF_NAME}" \
